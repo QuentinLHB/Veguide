@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:veguide/view/home_page.dart';
+import 'package:veguide/view/root.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         // TODO: Set a font family
       ),
-      home: const HomePage(title: 'Veguide'),
+      home: const Root(title: 'Veguide'),
     );
   }
 }
