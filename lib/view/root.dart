@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veguide/view/favorites_page.dart';
 import 'package:veguide/view/home_page.dart';
 
 class Root extends StatefulWidget {
@@ -15,9 +16,10 @@ class _RootState extends State<Root> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    Text(
-      'Fav tab',
-    ),
+    // Text(
+    //   'Fav tab',
+    // ),
+    FavoritesPage(),
     Text(
       'Contribute tab',
     ),
