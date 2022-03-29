@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:veguide/view/favorites_page.dart';
-import 'package:veguide/view/home_page.dart';
+import 'package:veguide/view/pages/favorites_page.dart';
+import 'package:veguide/view/pages/home_page.dart';
+import 'package:veguide/view/styles.dart';
 
 class Root extends StatefulWidget {
   const Root({Key? key, required this.title}) : super(key: key);
@@ -32,9 +33,7 @@ class _RootState extends State<Root> {
         title: Center(
           child: Text(
             widget.title,
-            style: const TextStyle(
-              fontFamily: 'SweetyRasty',
-            ),
+            style: styleH1,
           ),
         ),
       ),
