@@ -47,7 +47,7 @@ class _RootState extends State<Root> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.star_rate_rounded),
+            icon: Icon(Icons.favorite_rounded),
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
