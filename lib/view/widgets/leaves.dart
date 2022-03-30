@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:veguide/controller/leaves_controller.dart';
 import 'package:flutter/animation.dart';
+import 'package:veguide/view/styles.dart';
 
 class Leaves extends StatefulWidget {
   Leaves({Key? key, required this.leavesController}) : super(key: key);
@@ -12,32 +13,16 @@ class Leaves extends StatefulWidget {
 }
 
 class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
-  Map<int, AnimationController> animControllers ={};
-  // late AnimationController colorAnimController;
-
-  // late Animation colorAnimation;
-  // late Animation scaleAnimation;
-
+  Map<int, AnimationController> _animControllers ={};
 
   @override
   void initState() {
     super.initState();
     if(widget.leavesController.clickable){
-      animControllers[1] = createAnimationController();
-      animControllers[2] = createAnimationController();
-      animControllers[3] = createAnimationController();
+      _animControllers[1] = _createAnimationController();
+      _animControllers[2] = _createAnimationController();
+      _animControllers[3] = _createAnimationController();
     }
-
-    // scaleAnimation;
-    // colorAnimController = AnimationController(
-    //     duration: const Duration(milliseconds: 125), vsync: this);
-    // colorAnimation = ColorTween(
-    //     begin: Colors.black.withOpacity(0.5),
-    //     end: Colors.green.shade500
-    // ).animate(colorAnimController)
-    //   ..addListener(() {
-    //     setState(() {});
-    //   });
   }
 
   @override
@@ -46,8 +31,8 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
     for(var i=1; i <= 3; i++ ){
       leaves.add(
       widget.leavesController.clickable
-          ? createAnimatedLeaf(i)
-          : createStaticLeaf(i)
+          ? _createAnimatedLeaf(i)
+          : _createStaticLeaf(i)
       );
     }
     return Row(
@@ -56,19 +41,19 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
     );
   }
 
-  Widget createAnimatedLeaf(int level) =>
+  Widget _createAnimatedLeaf(int level) =>
       IconButton(
         icon: ScaleTransition(
-          scale: animControllers[level]!,
+          scale: _animControllers[level]!,
           child: Icon(Icons.eco_rounded,
             color: widget.leavesController.leafLevel >= level
-                ? Colors.green.shade500 // Selected
-                : Colors.black.withOpacity(0.5),
-            size: 30, // Not selected
+                ? deepGreen
+                : black,
+            size: 30,
           ),
         ),
         onPressed: () {
-          animate(level);
+          _animate(level);
           widget.leavesController.leafLevel = level;
           setState(() {});
         },
@@ -77,15 +62,15 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
       );
 
 
-  Widget createStaticLeaf(int level)=>
+  Widget _createStaticLeaf(int level)=>
       Icon(Icons.eco_rounded,
       color: widget.leavesController.leafLevel >= level
-          ? Colors.green.shade500 // Selected
-          : Colors.black.withOpacity(0.5),
+          ? deepGreen // Selected
+          : black,
       size: 30, // Not selected
     );
 
-  AnimationController createAnimationController()=> AnimationController(
+  AnimationController _createAnimationController()=> AnimationController(
     duration: const Duration(milliseconds: 125), vsync: this,
     value: 1.0,
     lowerBound: 1.0,
@@ -93,8 +78,8 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
 
   /// Animates leaves that are equal of of inferior value as the leaf clicked
   /// (represented by its [level]).
-  void animate(int level){
-    animControllers.forEach((leafLevel, controller) {
+  void _animate(int level){
+    _animControllers.forEach((leafLevel, controller) {
       if(leafLevel <= level){
         controller.forward().then((value) => controller.reverse());
       }

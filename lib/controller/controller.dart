@@ -25,7 +25,8 @@ class Controller {
         city: "Lille",
         imageURI:
             "https://scontent.fcdg1-1.fna.fbcdn.net/v/t1.18169-9/21731345_362591967511569_6909665824263452218_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=WJsRGbalGhMAX90XkBo&_nc_ht=scontent.fcdg1-1.fna&oh=00_AT_fvowCBUn-A84uC_T7T4UkwXQggfXBgfydKZMUPe2iLA&oe=6268502A",
-        leafLevel: 2);
+        leafLevel: 2,
+        tagIds: [4]);
 
     var r2 = Restaurant(
         id: 2,
@@ -40,7 +41,8 @@ class Controller {
         city: "Lille",
         imageURI:
             "https://scontent.fcdg1-1.fna.fbcdn.net/v/t1.18169-9/27751512_165608680890200_4058145502370455996_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=174925&_nc_ohc=Ci8t__dM6H8AX-hfQ7w&_nc_ht=scontent.fcdg1-1.fna&oh=00_AT8XzPU0rIUk8BUQFQODxOme4PyfklrShltqZkovX80K7g&oe=62688694",
-        leafLevel: 3);
+        leafLevel: 3,
+        tagIds: [5, 4]);
 
     var r3 = Restaurant(
         id: 3,
@@ -53,7 +55,8 @@ class Controller {
         city: "Lille",
         imageURI:
         "https://vegoresto.fr/wp-content/uploads/2017/05/restaurant-vegetarien-lille-pause0.png",
-         leafLevel: 3);
+         leafLevel: 3,
+        tagIds: [1, 2, 3, 4, 5]);
 
     var r4 = Restaurant(
         id: 3,
@@ -66,7 +69,9 @@ class Controller {
         city: "Lille",
         imageURI:
         "",
-        leafLevel: 3);
+        leafLevel: 3,
+
+        tagIds: [1]);
 
       var r5 = Restaurant(
         id: 3,
@@ -79,10 +84,15 @@ class Controller {
         city: "Lille",
         imageURI:
         "",
-        leafLevel: 2);
+        leafLevel: 2,
+      tagIds: [1, 2]);
 
 
 
     return [r1, r2, r3, r4, r5];
+  }
+
+  List<Restaurant> getFavorites(){
+    return getRestaurants();
   }
 }

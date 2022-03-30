@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:veguide/controller/controller.dart';
 import 'package:veguide/controller/leaves_controller.dart';
 import 'package:veguide/modele/restaurant.dart';
+import 'package:veguide/modele/tag.dart';
 import 'package:veguide/view/styles.dart';
+import 'package:veguide/view/widgets/expandable_tag_button.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 
 class RestaurantsExpandableList extends StatefulWidget {
@@ -16,13 +18,13 @@ class RestaurantsExpandableList extends StatefulWidget {
 }
 
 class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
-  List<bool> panelOpenList = [];
+  List<bool> _panelOpenList = [];
 
   @override
   void initState() {
     super.initState();
     for (var i = 0; i<widget.restaurants.length; i++) {
-      panelOpenList.add(false);
+      _panelOpenList.add(false);
     }
   }
 
@@ -30,7 +32,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
   Widget build(BuildContext context) {
     List<ExpansionPanel> panels = [];
     for (var i = 0; i<widget.restaurants.length; i++) {
-      panels.add(createRestaurantPanel(i, panelOpenList[i]));
+      panels.add(_createRestaurantPanel(i, _panelOpenList[i]));
     }
 
     return Expanded(
@@ -39,7 +41,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
           children: panels,
           expansionCallback: (index, isOpen){
             setState(() {
-              panelOpenList[index] = !isOpen;
+              _panelOpenList[index] = !isOpen;
             });
           },
         ),]
@@ -47,7 +49,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     );
   }
 
-  ExpansionPanel createRestaurantPanel(int index, bool open) {
+  ExpansionPanel _createRestaurantPanel(int index, bool open) {
     Restaurant restau = widget.restaurants[index];
     return ExpansionPanel(
         headerBuilder: (context, isOpen) {
@@ -114,8 +116,21 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
             ),
           );
         },
-        body: Text("je suis ouvert !!"),
-        isExpanded: panelOpenList[index],
+        body: createExpandedBody(widget.restaurants[index]),
+        isExpanded: _panelOpenList[index],
     canTapOnHeader: true,);
+  }
+
+  Widget createExpandedBody(Restaurant restaurant){
+    List<Widget> widgets = [];
+    for(Tag tag in restaurant.tags){
+      widgets.add(Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child:
+        // ElevatedButton(onPressed: (){}, child: Icon(tag.icon, size: 24,)),
+        ExpandableTagButton(tag: tag),
+      ));
+    }
+    return Wrap(children: widgets,) ;
   }
 }

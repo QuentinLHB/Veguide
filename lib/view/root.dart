@@ -44,15 +44,15 @@ class _RootState extends State<Root> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
-            label: 'Home',
+            label: 'Restaurants',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_rounded),
-            label: 'Favorites',
+            label: 'Favoris',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Contribute',
+            icon: Icon(Icons.more_horiz),
+            label: 'Plus',
           ),
         ],
         currentIndex: _selectedIndex,

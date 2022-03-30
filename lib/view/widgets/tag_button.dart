@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:veguide/view/styles.dart';
 
 class TagButton extends StatefulWidget {
-  TagButton({Key? key, required this.onPressed, this.icon, this.text})
+  TagButton({Key? key, required this.onPressed, this.icon, this.text, required this.isToggled})
       : super(key: key);
   VoidCallback onPressed;
   IconData? icon;
   String? text;
+  bool isToggled;
 
   @override
   _TagButtonState createState() => _TagButtonState();
 }
 
 class _TagButtonState extends State<TagButton> {
-  bool _isToggled = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class _TagButtonState extends State<TagButton> {
     return ElevatedButton(
       onPressed: (){widget.onPressed();
       setState(() {
-        _isToggled = !_isToggled;
+        widget.isToggled = !widget.isToggled;
       });},
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -35,8 +37,8 @@ class _TagButtonState extends State<TagButton> {
       ),
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(_isToggled ? Colors.green.shade500 : Colors.grey.shade200),
-        foregroundColor: MaterialStateProperty.all<Color>(_isToggled ? Colors.grey.shade200 : Colors.green.shade500),
+            MaterialStateProperty.all<Color>(widget.isToggled ? deepGreen : grey),
+        foregroundColor: MaterialStateProperty.all<Color>(widget.isToggled ? grey : deepGreen),
       ),
 
 

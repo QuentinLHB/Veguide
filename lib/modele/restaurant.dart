@@ -1,3 +1,6 @@
+import 'package:veguide/modele/tag.dart';
+import 'package:veguide/tools.dart';
+
 class Restaurant {
 
   int _id;
@@ -44,6 +47,10 @@ class Restaurant {
 
   int get leafLevel => _leafLevel;
 
+  List<Tag> _tags;
+  List<Tag> get tags => _tags;
+
+
   factory Restaurant({
     required int id,
     required String name,
@@ -56,10 +63,15 @@ class Restaurant {
     required String city,
     required String imageURI,
     required int leafLevel,
+    required List<int> tagIds,
   }){
-    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel);
+    List<Tag> tags = [];
+    for(int tagId in tagIds){
+      tags.add(Tools.findTag(tagId));
+    }
+    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags);
   }
 
   Restaurant._(this._id, this._name, this._desc, this._website, this._fb,
-      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel);
+      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags);
 }
