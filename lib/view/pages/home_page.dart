@@ -57,14 +57,22 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 2.5,
-                          child: TextField(
-                            controller: cityTextFieldController,
-                            decoration: const InputDecoration(
-                                hintText: "Lille", labelText: "Ville"),
-                            maxLength: 40,
-                            maxLines: 1,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 2.5,
+                            child: TextField(
+                              controller: cityTextFieldController,
+                              decoration: const InputDecoration(
+                                hintText: "Lille",
+                                labelText: "Ville",
+                              ),
+                              maxLength: 25,
+                              maxLines: 1,
+                              onSubmitted: (text) {
+                                searchButton_onPressed();
+                              },
+                            ),
                           ),
                         ),
                         IconButton(
@@ -84,7 +92,8 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     createTagButton(Tags.cheap),
                     createTagButton(Tags.rotativeMenu),
-                    createTagButton(Tags.cosy),
+                    createTagButton(Tags.takeAway),
+                    createTagButton(Tags.delivery),
                     createTagButton(Tags.newPlace),
                   ],
                 )
@@ -123,12 +132,13 @@ class _HomePageState extends State<HomePage> {
                               shadowColor: Colors.green.shade900,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  restau.imageURI ??
-                                      "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Begrippenlijst.svg",
-                                  // TODO remplacer par asset
-                                  fit: BoxFit.fitHeight,
-                                ),
+                                child: restau.imageURI != null
+                                    ? FadeInImage.assetNetwork(
+                                        placeholder:
+                                            'assets/images/restau_placeholder.jpg',
+                                        image: restau.imageURI!)
+                                    : Image.asset(
+                                        'assets/images/restau_placeholder.jpg'),
                               ),
                             ),
                           ),
@@ -191,19 +201,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget createSummary() {
     const padding = 8.0;
-    List<Widget> wrapWidgets = [];
-    if (cityTextFieldController.text != "") {
-      wrapWidgets.add(Padding(
-        padding: const EdgeInsets.symmetric(horizontal: padding),
-        child: Text(
-          cityTextFieldController.text,
-          style: styleH4,
-        ),
-      ));
-    }
+    List<Widget> widgets = [];
     _tagsToggles.forEach((tag, isToggled) {
       if (isToggled) {
-        wrapWidgets.add(Padding(
+        widgets.add(Padding(
           padding: const EdgeInsets.symmetric(horizontal: padding),
           child: Icon(
             tag.icon,
@@ -215,7 +216,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     if (_leafController.leafLevel > 1) {
-      wrapWidgets.add(Padding(
+      widgets.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: padding),
         child: Leaves(
             leavesController: LeavesController(
@@ -223,10 +224,29 @@ class _HomePageState extends State<HomePage> {
       ));
     }
 
-    return Wrap(
-      children: wrapWidgets,
+    var wrap = Wrap(
+      children: widgets,
       alignment: WrapAlignment.spaceEvenly,
       crossAxisAlignment: WrapCrossAlignment.center,
     );
+
+    if (cityTextFieldController.text != "") {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
+            child: Text(
+              "Ville : " + cityTextFieldController.text,
+              style: styleH4,
+            ),
+          ),
+          wrap,
+        ],
+      );
+    } else {
+      return wrap;
+    }
   }
 }
