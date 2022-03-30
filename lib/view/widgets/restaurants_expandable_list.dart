@@ -33,13 +33,17 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
       panels.add(createRestaurantPanel(i, panelOpenList[i]));
     }
 
-    return ExpansionPanelList(
-      children: panels,
-      expansionCallback: (index, isOpen){
-        setState(() {
-          panelOpenList[index] = !isOpen;
-        });
-      },
+    return Expanded(
+      child: ListView(
+        children: [ExpansionPanelList(
+          children: panels,
+          expansionCallback: (index, isOpen){
+            setState(() {
+              panelOpenList[index] = !isOpen;
+            });
+          },
+        ),]
+      ),
     );
   }
 
@@ -47,70 +51,71 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     Restaurant restau = widget.restaurants[index];
     return ExpansionPanel(
         headerBuilder: (context, isOpen) {
-          return Container(
+          return SizedBox(
             height: 125,
-            child: Card(
-              child: Row(
-                children: [
-                  /// Left part containing the image.
-                  Flexible(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: PhysicalModel(
-                        color: Colors.black,
-                        elevation: 5.0,
+            child: Row(
+              children: [
+                /// Left part containing the image.
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: PhysicalModel(
+                      color: Colors.black,
+                      elevation: 5.0,
+                      borderRadius: BorderRadius.circular(10.0),
+                      shadowColor: Colors.green.shade900,
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        shadowColor: Colors.green.shade900,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: restau.imageURI != null
-                              ? FadeInImage.assetNetwork(
-                                  placeholder:
-                                      'assets/images/restau_placeholder.jpg',
-                                  image: restau.imageURI!)
-                              : Image.asset(
-                                  'assets/images/restau_placeholder.jpg'),
-                        ),
+                        child: restau.imageURI != null
+                            ? FadeInImage.assetNetwork(
+                                placeholder:
+                                    'assets/images/restau_placeholder.jpg',
+                                imageErrorBuilder: (context, object, trace){ return Image.asset(
+                                    'assets/images/restau_placeholder.jpg');},
+                                image: restau.imageURI!)
+                            : Image.asset(
+                                'assets/images/restau_placeholder.jpg'),
                       ),
                     ),
                   ),
+                ),
 
-                  /// Right part containing the info.
-                  Flexible(
-                    flex: 7,
-                    child: Align(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            restau.name,
-                            style: styleH2,
-                          ),
-                          Text(
-                            restau.address,
-                            style: styleH6,
-                          ),
-                          Text(
-                            restau.cityCode + " " + restau.city,
-                            style: styleH6,
-                          ),
-                          Leaves(
-                            leavesController:
-                                LeavesController(leafLevel: restau.leafLevel),
-                          )
-                        ],
-                      ),
+                /// Right part containing the info.
+                Flexible(
+                  flex: 7,
+                  child: Align(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          restau.name,
+                          style: styleH2,
+                        ),
+                        Text(
+                          restau.address,
+                          style: styleH6,
+                        ),
+                        Text(
+                          restau.cityCode + " " + restau.city,
+                          style: styleH6,
+                        ),
+                        Leaves(
+                          leavesController:
+                              LeavesController(leafLevel: restau.leafLevel),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
         body: Text("je suis ouvert !!"),
-        isExpanded: panelOpenList[index]);
+        isExpanded: panelOpenList[index],
+    canTapOnHeader: true,);
   }
 }
