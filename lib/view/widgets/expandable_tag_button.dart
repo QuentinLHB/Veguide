@@ -64,7 +64,10 @@ class _ExpandableTagButtonState extends State<ExpandableTagButton>
                       text = "";
                     }else{
                       text = widget.tag.name;
-                      width = text.length*11+padding*2;
+                      // Horrible code: Animation only works with defined width value.
+                      //  Therefore, I calculate the necessary width based on the text, with
+                      //  hard-coded value for each tag. It's lame, I know.
+                      width = text.length*widget.tag.width + padding*2;
                     }
                     _isExpanded = !_isExpanded;
                   });

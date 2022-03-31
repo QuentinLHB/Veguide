@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veguide/view/root.dart';
+import 'package:veguide/view/styles.dart';
 
 void main() {
   runApp(const MyApp());

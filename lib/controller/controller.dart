@@ -19,7 +19,7 @@ class Controller {
         desc:
             "Cuisine saine et gourmande privilégiant les aliments BIO et locaux. Garantie sans huile de palme et sans produit d'origine animale.",
         fb: "https://www.facebook.com/LaClairiereLille/",
-        phone: "03 20 11 23 16",
+        phone: "0678549057",
         address: "75 Bd de la Liberté",
         cityCode: "59000",
         city: "Lille",
@@ -35,7 +35,7 @@ class Controller {
             "Des plats français & du monde revisités, à la façon d'un estaminet. Blanquette, carbonade, ramen, poutine, tartare & co n'auront plus de secret pour vous.. & en version 100% végétale !",
         website: "https://www.annieskitchen.fr/",
         fb: "https://www.facebook.com/annieskitchenlille/",
-        phone: "03 20 37 32 88",
+        phone: "06 78 54 90 57",
         address: "222 Rue Léon Gambetta",
         cityCode: "59000",
         city: "Lille",

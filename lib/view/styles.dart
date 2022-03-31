@@ -6,6 +6,7 @@ TextStyle styleH2 = TextStyle(fontSize: 20, color: deepGreen, fontWeight: FontWe
 TextStyle styleH3 = TextStyle(fontSize: 16, color: deepGreen);
 TextStyle styleH4 = const TextStyle(fontSize: 16);
 TextStyle styleH6 = const TextStyle(fontSize: 14);
+TextStyle italicGreen = TextStyle(fontSize: 14, color: deepGreen, fontStyle: FontStyle.italic);
 
 Color deepGreen = Colors.green.shade700;
 Color grey = Colors.grey.shade200;

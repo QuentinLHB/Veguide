@@ -33,4 +33,13 @@ extension TagsText on Tag{
       case Tag.delivery: return Icons.motorcycle;
     }
   }
+
+  double get width{
+    switch(this){
+      case Tag.cheap: return 11;
+      case Tag.newPlace: return 13;
+      case Tag.rotativeMenu: return 9;
+      default: return 10;
+    }
+  }
 }

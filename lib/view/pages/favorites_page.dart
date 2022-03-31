@@ -12,7 +12,11 @@ class FavoritesPage extends StatefulWidget {
 class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
-    // return RestaurantsExpandableList(restaurants: Controller().getFavorites());
-    return Text("");
+    return Column(
+      children: [
+        RestaurantsExpandableList(restaurants: Controller().getFavorites()),
+      ],
+    );
+    // return Text("");
   }
 }

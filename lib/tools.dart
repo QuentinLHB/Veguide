@@ -12,4 +12,16 @@ class Tools{
       default: return Tag.cheap;
     }
   }
+
+  static String removeHttp(String url){
+    // if(url.contains("https://")){
+    //   return url.split("https://")[1];
+    // }
+    // else if(url.contains("http://")){
+    //   return url.split("http://")[1];
+    // }else{
+      return url;
+    // }
+
+  }
 }

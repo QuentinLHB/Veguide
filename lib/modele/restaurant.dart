@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 
@@ -69,9 +70,17 @@ class Restaurant {
     for(int tagId in tagIds){
       tags.add(Tools.findTag(tagId));
     }
+    if(website != null){
+      website = Tools.removeHttp(website);
+    }
+    if(fb != null){
+      fb = Tools.removeHttp(fb);
+    }
     return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags);
   }
 
   Restaurant._(this._id, this._name, this._desc, this._website, this._fb,
       this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags);
+
+
 }
