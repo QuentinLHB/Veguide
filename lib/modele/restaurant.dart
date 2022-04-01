@@ -51,6 +51,10 @@ class Restaurant {
   List<Tag> _tags;
   List<Tag> get tags => _tags;
 
+  bool _isFav = false;
+  bool get isFav => _isFav;
+  set isFav(bool isFav) => _isFav = isFav;
+
 
   factory Restaurant({
     required int id,
@@ -65,6 +69,8 @@ class Restaurant {
     required String imageURI,
     required int leafLevel,
     required List<int> tagIds,
+    bool? isFav,
+    // required List<> //TODO: ajouter horaires
   }){
     List<Tag> tags = [];
     for(int tagId in tagIds){
@@ -76,11 +82,13 @@ class Restaurant {
     if(fb != null){
       fb = Tools.removeHttp(fb);
     }
-    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags);
+    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags, isFav);
   }
 
   Restaurant._(this._id, this._name, this._desc, this._website, this._fb,
-      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags);
+      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags, bool? isFav){
+    if(isFav != null) _isFav = isFav;
+  }
 
 
 }

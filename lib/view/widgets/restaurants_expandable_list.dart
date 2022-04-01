@@ -5,6 +5,7 @@ import 'package:veguide/modele/restaurant.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/expandable_tag_button.dart';
+import 'package:veguide/view/widgets/fav_button.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,6 +21,8 @@ class RestaurantsExpandableList extends StatefulWidget {
 
 class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
   List<bool> _panelOpenList = [];
+
+  // final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -37,16 +40,20 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     }
 
     return Expanded(
-      child: ListView(children: [
-        ExpansionPanelList(
-          children: panels,
-          expansionCallback: (index, isOpen) {
-            setState(() {
-              _panelOpenList[index] = !isOpen;
-            });
-          },
-        ),
-      ]),
+      child: ListView(
+          // controller: _scrollController,
+          children: [
+            ExpansionPanelList(
+              // expandedHeaderPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+              elevation: 2,
+              children: panels,
+              expansionCallback: (index, isOpen) {
+                setState(() {
+                  _panelOpenList[index] = !isOpen;
+                });
+              },
+            ),
+          ]),
     );
   }
 
@@ -63,23 +70,47 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                 flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: PhysicalModel(
-                    color: Colors.black,
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(10.0),
-                    shadowColor: Colors.green.shade900,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: restau.imageURI != null
-                          ? FadeInImage.assetNetwork(
-                              placeholder:
-                                  'assets/images/restau_placeholder.jpg',
-                              imageErrorBuilder: (context, object, trace) {
-                                return Image.asset(
-                                    'assets/images/restau_placeholder.jpg');
-                              },
-                              image: restau.imageURI!)
-                          : Image.asset('assets/images/restau_placeholder.jpg'),
+
+                  /// Shadow box beneath the image.
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: Offset(3, 4), // changes position of shadow
+                        ),
+                      ],
+                    ),
+
+                    /// Restaurant's image.
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: restau.imageURI != null
+                              ? FadeInImage.assetNetwork(
+                                  placeholder: 'assets/icons/icon.jpg',
+                                  imageErrorBuilder: (context, object, trace) {
+                                    return Image.asset('assets/icons/icon.jpg');
+                                  },
+                                  image: restau.imageURI!)
+                              : Image.asset('assets/icons/icon.jpg'),
+                        ),
+
+                        /// Favorite button on the top right corner of the image.
+                        Positioned(
+                          child: FavButton(
+                            isFav: restau.isFav,
+                            onPressed: () {
+                              restau.isFav = !restau.isFav;
+                            },
+                          ),
+                          right: 0,
+                          top: 0,
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -132,20 +163,29 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
         child: ExpandableTagButton(tag: tag),
       ));
     }
-    
-    List<Widget> contactButtons = [];
-    contactButtons.add(createContactButton(prefix: "tel:", contactLink: restaurant.phone, icon: Icons.local_phone_rounded, content: restaurant.phone),);
-    if(restaurant.website != null){
-      contactButtons.add(createContactButton(prefix:"https:", contactLink:restaurant.website!, content: "Site"),);
-    }
-    if(restaurant.fb != null){
-      contactButtons.add(createContactButton(prefix:"https:", contactLink:restaurant.fb!, icon: Icons.facebook_rounded));
-    }
 
+    List<Widget> contactButtons = [];
+    contactButtons.add(
+      createContactButton(
+          onPressed: () => _makePhoneCall(restaurant.phone),
+          icon: Icons.local_phone_rounded,
+          content: restaurant.phone),
+    );
+    if (restaurant.website != null) {
+      contactButtons.add(createContactButton(
+        onPressed: () => _launchInBrowser(restaurant.website!),
+        icon: Icons.language_rounded,
+      ));
+    }
+    if (restaurant.fb != null) {
+      contactButtons.add(createContactButton(
+          onPressed: () => _launchInBrowser(restaurant.fb!),
+          icon: Icons.facebook_rounded));
+    }
 
     return Column(
       children: [
-        Wrap(children :contactButtons),
+        Wrap(children: contactButtons),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
           child: Text(
@@ -155,40 +195,60 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
         ),
         Wrap(
           children: tagButtons,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: InkWell(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.edit_note,
+                    // color: deepGreen,
+                    size: 20,),
+                  Text(
+                    "Apporter une modification",
+                    style: TextStyle(/**color: deepGreen,*/ fontStyle: FontStyle.italic, fontSize: 12),
+                  ),
+                ],
+              ),
+              onTap: () {
+                // TODO : Redirection vers formulaire
+              },
+            ),
+          ),
         )
       ],
     );
   }
 
-
-  //TODO: Améliorer : Envoyer onpressed directement plutôt qu'un préfix foireux.
-  /// Creates a widget displaying an [icon] or not, a [String] [content] or not. When clicked, it launches
-  /// the contact, according to the [prefix] (tel or https).
-  Widget createContactButton({IconData? icon, required String prefix, required String contactLink, String? content}) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(25.0),
-      child: ElevatedButton(
-        onPressed: () {
-          if(prefix == "tel:"){
-            _makePhoneCall(contactLink);
-          }else{
-            _launchInBrowser(contactLink);
-          }
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            icon == null ? const SizedBox.shrink() : Icon(icon),
-            content == null ? const SizedBox.shrink() : Text(content),
-          ],
+  /// Creates a widget displaying an [icon] and/or a [String] [content].
+  Widget createContactButton({
+    required VoidCallback onPressed,
+    String? content,
+    IconData? icon,
+  }) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(25.0),
+          child: ElevatedButton(
+            onPressed: onPressed,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon == null ? const SizedBox.shrink() : Icon(icon),
+                content == null ? const SizedBox.shrink() : Text(content),
+              ],
+            ),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(deepGreen),
+            ),
+          ),
         ),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(deepGreen),
-        ),
-      ),
-    ),
-  );
+      );
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
@@ -212,4 +272,12 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
       throw 'Could not launch $url';
     }
   }
+
+// void _scrollDown() {
+//   _scrollController.animateTo(
+//     _scrollController.position.maxScrollExtent,
+//     duration: Duration(seconds: 1),
+//     curve: Curves.fastOutSlowIn,
+//   );
+// }
 }

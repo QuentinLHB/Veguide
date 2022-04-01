@@ -9,7 +9,6 @@ import 'package:veguide/view/widgets/restaurants_expandable_list.dart';
 import 'package:veguide/view/widgets/tag_button.dart';
 import 'package:veguide/view/styles.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -18,7 +17,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _cityTextFieldController = TextEditingController();
+  final TextEditingController _cityTextFieldController =
+      TextEditingController();
   late FocusNode cityTextFieldFocusNode;
   final Map<Tag, bool> _tagsToggles = {};
   final LeavesController _leafController =
@@ -31,7 +31,8 @@ class _HomePageState extends State<HomePage> {
     _resetTagButtons();
   }
 
-  @override void dispose() {
+  @override
+  void dispose() {
     super.dispose();
     unfocusTextField();
   }
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                                 // search();
                                 unfocusTextField();
                               },
-                              onEditingComplete: (){
+                              onEditingComplete: () {
                                 unfocusTextField();
                               },
                             ),
@@ -85,7 +86,24 @@ class _HomePageState extends State<HomePage> {
                     Leaves(leavesController: _leafController),
                     IconButton(
                       icon: const Icon(Icons.help),
-                      onPressed: () {},
+                      onPressed: () {
+                        showGeneralDialog(
+                          context: context,
+                          transitionBuilder: (context, a1, a2, widget) {
+                            return Transform.scale(
+                              scale: a1.value,
+                              child: Opacity(
+                                opacity: a1.value,
+                                child: _buildPopupDialog(context),
+                              ),
+                            );
+                          },
+                          transitionDuration: Duration(milliseconds: 200),
+                          pageBuilder: (context, anim1, anim2) {
+                            return SizedBox.shrink();
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -104,36 +122,48 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(onPressed: search, child:
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-                      child: Icon(Icons.search_rounded),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: search,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 3.0),
+                          child: Icon(Icons.search_rounded),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(deepGreen),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(grey)),
+                      ),
                     ),
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(deepGreen),
-                        foregroundColor: MaterialStateProperty.all<Color>(grey)),),
-                  ),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(onPressed: resetFilters, child:
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-                    child: Icon(Icons.delete),
-                  ),
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(grey),
-                      foregroundColor: MaterialStateProperty.all<Color>(deepGreen)),),
+                      child: ElevatedButton(
+                        onPressed: resetFilters,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 3.0),
+                          child: Icon(Icons.delete),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(grey),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(deepGreen)),
+                      ),
                     ),
-                  //
-                  // IconButton(
-                  //     onPressed: searchButton_onPressed,
-                  //     icon: const Icon(Icons.search_rounded)),
-                  // IconButton(
-                  //     onPressed: searchButton_onPressed,
-                  //     icon: const Icon(Icons.delete)),
-
-                ],)
+                    //
+                    // IconButton(
+                    //     onPressed: searchButton_onPressed,
+                    //     icon: const Icon(Icons.search_rounded)),
+                    // IconButton(
+                    //     onPressed: searchButton_onPressed,
+                    //     icon: const Icon(Icons.delete)),
+                  ],
+                )
               ],
             ),
             collapsed: Padding(
@@ -150,7 +180,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void unfocusTextField(){
+  void unfocusTextField() {
     cityTextFieldFocusNode.unfocus();
   }
 
@@ -224,7 +254,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void resetFilters(){
+  void resetFilters() {
     setState(() {
       _cityTextFieldController.text = "";
       _resetTagButtons();
@@ -233,9 +263,51 @@ class _HomePageState extends State<HomePage> {
     search();
   }
 
-  void _resetTagButtons(){
+  void _resetTagButtons() {
     for (Tag tag in Tag.values) {
       _tagsToggles[tag] = false;
     }
+  }
+
+  Widget _buildPopupDialog(BuildContext context) {
+    return new AlertDialog(
+      shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+      title: const Text('Niveaux de feuilles'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildLeafExplaination(1,
+              "L’endroit propose le strict minimum et il est inscrit à la carte."),
+          _buildLeafExplaination(
+              2, "L’endroit propose plusieurs choix à la carte."),
+          _buildLeafExplaination(3,
+              "L’endroit est 100% vegan ou propose toute sa carte en version vegan."),
+        ],
+      ),
+      actions: <Widget>[
+        new ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLeafExplaination(int leafLevel, String description) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.start,
+        children: [
+          Leaves(
+              leavesController:
+                  LeavesController(leafLevel: leafLevel, clickable: false)),
+          Text(description),
+        ],
+      ),
+    );
   }
 }

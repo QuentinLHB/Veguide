@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:veguide/view/pages/favorites_page.dart';
 import 'package:veguide/view/pages/home_page.dart';
+import 'package:veguide/view/pages/plus_page.dart';
 import 'package:veguide/view/styles.dart';
 
 class Root extends StatefulWidget {
@@ -21,9 +22,7 @@ class _RootState extends State<Root> {
     //   'Fav tab',
     // ),
     FavoritesPage(),
-    Text(
-      'Contribute tab',
-    ),
+    PlusPage(),
   ];
 
   @override

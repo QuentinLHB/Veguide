@@ -13,7 +13,7 @@
         </intent>
     </queries>
    <application
-        android:label="veguide"
+        android:label="Veguide"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
