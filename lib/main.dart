@@ -18,7 +18,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
         primary: Colors.green[700],
         secondary: Colors.green.shade700),
-        primaryTextTheme: TextTheme(titleMedium: TextStyle(color: Colors.black))
+        primaryTextTheme: TextTheme(
+          titleLarge: TextStyle(fontSize: 20, color: deepGreen, fontWeight: FontWeight.bold),
+            titleMedium: TextStyle(color: Colors.green.shade700,),
+            bodyMedium: TextStyle(color: Colors.black),
+        ),
       ),
       home: const Root(title: 'Veguide'),
     );

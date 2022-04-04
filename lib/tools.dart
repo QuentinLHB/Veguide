@@ -1,4 +1,5 @@
 import 'package:veguide/modele/tag.dart';
+import 'package:flutter/material.dart';
 
 class Tools{
 
@@ -24,4 +25,30 @@ class Tools{
     // }
 
   }
+
+  static void showAnimatedDialog(
+          {required BuildContext context,
+            required String title,
+            List<Widget>? actions,
+            required Widget content})=> showGeneralDialog(
+      context: context,
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child:  AlertDialog(
+              shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+              title: Text(title),
+              content: content,
+              actions: actions,
+            ),
+            ),
+          );
+      },
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (context, anim1, anim2) {
+        return SizedBox.shrink();
+      },
+    );
 }

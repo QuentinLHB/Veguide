@@ -209,8 +209,8 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                     // color: deepGreen,
                     size: 20,),
                   Text(
-                    "Apporter une modification",
-                    style: TextStyle(/**color: deepGreen,*/ fontStyle: FontStyle.italic, fontSize: 12),
+                    "Suggérer une modification",
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
                   ),
                 ],
               ),

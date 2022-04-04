@@ -43,7 +43,7 @@ class _FavButtonState extends State<FavButton>
           scale: _animationController,
           child: Icon(
             widget.isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-            color: Colors.red.shade800.withOpacity(0.6),
+            color: Colors.red.shade800,
           ),
         ));
   }
