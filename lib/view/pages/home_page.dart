@@ -52,60 +52,34 @@ class _HomePageState extends State<HomePage> {
             )),
             expanded: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: TextField(
-                              controller: _cityTextFieldController,
-                              focusNode: cityTextFieldFocusNode,
-                              decoration: const InputDecoration(
-                                hintText: "Lille",
-                                labelText: "Ville / Code Postal",
-                              ),
-                              maxLength: 25,
-                              maxLines: 1,
-                              onSubmitted: (text) {
-                                // search();
-                                unfocusTextField();
-                              },
-                              onEditingComplete: () {
-                                unfocusTextField();
-                              },
-                            ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: TextField(
+                          controller: _cityTextFieldController,
+                          focusNode: cityTextFieldFocusNode,
+                          decoration: const InputDecoration(
+                            hintText: "Lille",
+                            labelText: "Ville / Code Postal",
                           ),
+                          maxLength: 25,
+                          maxLines: 1,
+                          onSubmitted: (text) {
+                            // search();
+                            unfocusTextField();
+                          },
+                          onEditingComplete: () {
+                            unfocusTextField();
+                          },
                         ),
-                      ],
-                    ),
-                    Leaves(leavesController: _leafController),
-                    IconButton(
-                      icon: const Icon(Icons.help),
-                      onPressed: () {
-                        showGeneralDialog(
-                          context: context,
-                          transitionBuilder: (context, a1, a2, widget) {
-                            return Transform.scale(
-                              scale: a1.value,
-                              child: Opacity(
-                                opacity: a1.value,
-                                child: _buildPopupDialog(context),
-                              ),
-                            );
-                          },
-                          transitionDuration: Duration(milliseconds: 200),
-                          pageBuilder: (context, anim1, anim2) {
-                            return SizedBox.shrink();
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                      ),
+                      Leaves(leavesController: _leafController),
+                    ],
+                  ),
                 ),
                 Wrap(
                   alignment: WrapAlignment.spaceAround,
@@ -267,47 +241,5 @@ class _HomePageState extends State<HomePage> {
     for (Tag tag in Tag.values) {
       _tagsToggles[tag] = false;
     }
-  }
-
-  Widget _buildPopupDialog(BuildContext context) {
-    return new AlertDialog(
-      shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-      title: const Text('Niveaux de feuilles'),
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _buildLeafExplaination(1,
-              "L’endroit propose le strict minimum et il est inscrit à la carte."),
-          _buildLeafExplaination(
-              2, "L’endroit propose plusieurs choix à la carte."),
-          _buildLeafExplaination(3,
-              "L’endroit est 100% vegan ou propose toute sa carte en version vegan."),
-        ],
-      ),
-      actions: <Widget>[
-        new ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLeafExplaination(int leafLevel, String description) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.start,
-        children: [
-          Leaves(
-              leavesController:
-                  LeavesController(leafLevel: leafLevel, clickable: false)),
-          Text(description),
-        ],
-      ),
-    );
   }
 }

@@ -15,8 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Veguide',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        // TODO: Set a font family
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+        primary: Colors.green[700],
+        secondary: Colors.green.shade700),
+        primaryTextTheme: TextTheme(titleMedium: TextStyle(color: Colors.black))
       ),
       home: const Root(title: 'Veguide'),
     );

@@ -89,7 +89,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
-                          child: restau.imageURI != null
+                          child: restau.imageURI != null && restau.imageURI!.isNotEmpty
                               ? FadeInImage.assetNetwork(
                                   placeholder: 'assets/icons/icon.jpg',
                                   imageErrorBuilder: (context, object, trace) {
@@ -244,7 +244,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
               ],
             ),
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(deepGreen),
+              // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
             ),
           ),
         ),
