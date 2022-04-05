@@ -33,7 +33,7 @@ class _FavButtonState extends State<FavButton>
       padding: EdgeInsets.zero,
       constraints: BoxConstraints(),
       alignment: Alignment.topRight,
-      iconSize: 25,
+      iconSize: 30,
         onPressed: () {
           _animate();
           setState(() {});

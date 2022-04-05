@@ -39,7 +39,7 @@ class Tools{
             opacity: a1.value,
             child:  AlertDialog(
               shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-              title: Text(title),
+              title: Center(child: Text(title)),
               content: content,
               actions: actions,
             ),

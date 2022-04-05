@@ -68,9 +68,9 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
                         "Un strict minimum végan est proposé à la carte."),
                     _buildLeafExplaination(
                         2,
-                        "Plusieurs options véganes sont proposées à la carte"),
+                        "Plusieurs options véganes sont proposées à la carte."),
                     _buildLeafExplaination(3,
-                        "La carte est 100% végane ou la décline entièrement en version végan."),
+                        "La carte est 100% végane ou est entièrement déclinée en version végan."),
                   ],
                 ));
           },

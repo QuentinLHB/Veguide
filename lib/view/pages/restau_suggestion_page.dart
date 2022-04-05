@@ -59,8 +59,18 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
             padding: const EdgeInsets.symmetric(vertical: 22.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text("Vous connaissez un restaurant non-répertorié sur l'application ? Proposez-le !", style: Theme.of(context).primaryTextTheme.titleMedium,),
-            Text("(*: Champs obligatoires)", style: TextStyle(color: Colors.red.shade700, fontSize: 10),)]),
+              children: [
+                Text(
+                  "Vous connaissez un restaurant non-répertorié sur l'application ? Proposez-le !",
+                  style: Theme.of(context).primaryTextTheme.titleMedium,
+                ),
+                SizedBox(height: 5,),
+                Text(
+                  "(*: Champs obligatoires)",
+                  style: TextStyle(color: Colors.red.shade700, fontSize: 10),
+                ),
+              ],
+            ),
           ),
           SuggestionField(
             text: "Nom",
@@ -98,7 +108,8 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
           ),
           SuggestionField(
             text: "Description",
-            hint: "Carte créative proposant des plats 100% végans et de saison, dans une ambiance chaleureuse.",
+            hint:
+                "Carte créative proposant des plats 100% végans et de saison, dans une ambiance chaleureuse.",
             controller: _fieldControllers[Field.desc]!,
             isMultiLine: true,
             charLimit: 250,
@@ -111,7 +122,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
           ),
           SuggestionField(
             text: "Site",
-            hint: "http://www.monrestaurantvegan.fr",
+            hint: "https://www.monrestaurantvegan.fr",
             controller: _fieldControllers[Field.website]!,
             charLimit: 250,
           ),
@@ -146,7 +157,8 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
           ),
           SuggestionField(
             text: "Commentaire",
-            hint: "Commentaire à l'intention de l'administrateur de l'application",
+            hint:
+                "Commentaire à l'intention de l'administrateur de l'application.",
             controller: _fieldControllers[Field.comment]!,
             isMultiLine: true,
             charLimit: 500,

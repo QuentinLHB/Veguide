@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 
@@ -22,7 +23,9 @@ class Restaurant {
 
   String? _fb;
 
-  String? get fb => _fb;
+  String? get fb {
+    if(_fb != null) return "https://www.facebook.com/{}" + _fb!;
+  else return null;}
 
   String _phone;
 
@@ -55,6 +58,8 @@ class Restaurant {
   bool get isFav => _isFav;
   set isFav(bool isFav) => _isFav = isFav;
 
+  List<Schedule> _schedules;
+  List<Schedule> get schedules => _schedules;
 
   factory Restaurant({
     required int id,
@@ -69,6 +74,7 @@ class Restaurant {
     required String imageURI,
     required int leafLevel,
     required List<int> tagIds,
+    required List<Schedule> shedules,
     bool? isFav,
     // required List<> //TODO: ajouter horaires
   }){
@@ -82,11 +88,11 @@ class Restaurant {
     if(fb != null){
       fb = Tools.removeHttp(fb);
     }
-    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags, isFav);
+    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags, shedules, isFav);
   }
 
   Restaurant._(this._id, this._name, this._desc, this._website, this._fb,
-      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags, bool? isFav){
+      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags, this._schedules, bool? isFav){
     if(isFav != null) _isFav = isFav;
   }
 

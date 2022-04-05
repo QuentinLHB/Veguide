@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:veguide/controller/controller.dart';
 import 'package:veguide/controller/leaves_controller.dart';
 import 'package:veguide/modele/restaurant.dart';
+import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
+import 'package:veguide/tools.dart';
 import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/expandable_tag_button.dart';
 import 'package:veguide/view/widgets/fav_button.dart';
@@ -89,7 +91,8 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
-                          child: restau.imageURI != null && restau.imageURI!.isNotEmpty
+                          child: restau.imageURI != null &&
+                                  restau.imageURI!.isNotEmpty
                               ? FadeInImage.assetNetwork(
                                   placeholder: 'assets/icons/icon.jpg',
                                   imageErrorBuilder: (context, object, trace) {
@@ -98,18 +101,6 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                                   image: restau.imageURI!)
                               : Image.asset('assets/icons/icon.jpg'),
                         ),
-
-                        /// Favorite button on the top right corner of the image.
-                        Positioned(
-                          child: FavButton(
-                            isFav: restau.isFav,
-                            onPressed: () {
-                              restau.isFav = !restau.isFav;
-                            },
-                          ),
-                          right: 0,
-                          top: 0,
-                        )
                       ],
                     ),
                   ),
@@ -165,6 +156,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     }
 
     List<Widget> contactButtons = [];
+
     contactButtons.add(
       createContactButton(
           onPressed: () => _makePhoneCall(restaurant.phone),
@@ -185,6 +177,31 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
 
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: InkWell(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.watch_later_outlined,
+                  color: deepGreen,
+                  size: 28,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "Heures d'ouverture",
+                  style: Theme.of(context).primaryTextTheme.titleMedium,
+                ),
+              ],
+            ),
+            onTap: () {
+              _openHoursPopUpMenu(restaurant);
+            },
+          ),
+        ),
         Wrap(children: contactButtons),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
@@ -197,27 +214,39 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
           children: tagButtons,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: InkWell(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.edit_note,
-                    // color: deepGreen,
-                    size: 20,),
-                  Text(
-                    "Suggérer une modification",
-                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
-                  ),
-                ],
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Icon(
+                      Icons.edit_note,
+                      // color: deepGreen,
+                      size: 20,
+                    ),
+                    Text(
+                      "Suggérer une modification",
+                      style:
+                          TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  // TODO : Redirection vers formulaire
+                },
               ),
-              onTap: () {
-                // TODO : Redirection vers formulaire
-              },
-            ),
+              Spacer(),
+              FavButton(
+                isFav: restaurant.isFav,
+                onPressed: () {
+                  restaurant.isFav = !restaurant.isFav;
+                },
+              ),
+            ],
           ),
         )
       ],
@@ -240,12 +269,13 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 icon == null ? const SizedBox.shrink() : Icon(icon),
+                (icon == null || content == null) ? SizedBox.shrink() : SizedBox(width: 4,),
                 content == null ? const SizedBox.shrink() : Text(content),
               ],
             ),
             style: ButtonStyle(
-              // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-            ),
+                // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                ),
           ),
         ),
       );
@@ -271,6 +301,45 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     )) {
       throw 'Could not launch $url';
     }
+  }
+
+  void _openHoursPopUpMenu(Restaurant restaurant) {
+    List<Widget> scheduleWidgets = [];
+    for (Schedule schedule in restaurant.schedules) {
+      scheduleWidgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                    text: schedule.jour + " : ",
+                    style: Theme.of(context).primaryTextTheme.bodyLarge),
+                TextSpan(text: schedule.getHours(), style: Theme.of(context).primaryTextTheme.bodyMedium),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    Tools.showAnimatedDialog(
+      context: context,
+      title: "Horaires d'ouverture",
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: scheduleWidgets,
+      ),
+      actions: <Widget>[
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    );
   }
 
 // void _scrollDown() {
