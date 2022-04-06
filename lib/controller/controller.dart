@@ -118,7 +118,6 @@ class Controller {
       address: "106 Rue de l'Hôpital Militaire",
       cityCode: "59000",
       city: "Lille",
-      imageURI: "",
       leafLevel: 2,
       tagIds: [1, 2],
       isFav: false,
