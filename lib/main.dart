@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
           titleMedium: TextStyle(
             color: Colors.green.shade700, fontSize: 16
           ),
-          bodyLarge: TextStyle(color: Colors.green.shade700),
-          bodyMedium: TextStyle(color: Colors.black),
+          bodyLarge: TextStyle(color: Colors.green.shade700, fontSize: 15),
+          bodyMedium: TextStyle(color: Colors.black, fontSize: 15),
         ),
       ),
       home: const Root(title: 'Veguide'),

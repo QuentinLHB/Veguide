@@ -31,6 +31,7 @@ class _RootState extends State<Root> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+    centerTitle: true,
         title: AppTitle(),
         actions: [
          PopupMenuButton<int>(
@@ -56,12 +57,7 @@ class _RootState extends State<Root> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_rounded),
-            label: 'Favoris',
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.more_horiz),
-          //   label: 'Plus',
-          // ),
+            label: 'Favoris',),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green[800],

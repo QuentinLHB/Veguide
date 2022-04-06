@@ -5,6 +5,7 @@ import 'package:veguide/modele/restaurant.dart';
 import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
+import 'package:veguide/view/pages/edit_restaurant_page.dart';
 import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/expandable_tag_button.dart';
 import 'package:veguide/view/widgets/fav_button.dart';
@@ -24,8 +25,6 @@ class RestaurantsExpandableList extends StatefulWidget {
 class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
   List<bool> _panelOpenList = [];
 
-  // final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -43,10 +42,8 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
 
     return Expanded(
       child: ListView(
-          // controller: _scrollController,
           children: [
             ExpansionPanelList(
-              // expandedHeaderPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
               elevation: 2,
               children: panels,
               expansionCallback: (index, isOpen) {
@@ -76,6 +73,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                   /// Shadow box beneath the image.
                   child: Container(
                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.4),
@@ -236,7 +234,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                   ],
                 ),
                 onTap: () {
-                  // TODO : Redirection vers formulaire
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>EditRestaurantPage(restaurant: restaurant,)));
                 },
               ),
               Spacer(),

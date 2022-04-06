@@ -20,7 +20,7 @@ class Controller {
         name: "La Clairière",
         desc:
             "Cuisine saine et gourmande privilégiant les aliments BIO et locaux. Garantie sans huile de palme et sans produit d'origine animale.",
-        fb: "LaClairiereLille/",
+        fb: "LaClairiereLille",
         phone: "03 20 11 23 16",
         address: "75 Bd de la Liberté",
         cityCode: "59000",
@@ -30,7 +30,7 @@ class Controller {
         leafLevel: 2,
         tagIds: [4],
         isFav: true,
-        shedules: [
+        schedules: [
           Schedule(idJour: 0, jour: "Lundi"),
           Schedule(
               idJour: 1,
@@ -55,7 +55,7 @@ class Controller {
         leafLevel: 3,
         tagIds: [5, 4],
         isFav: false,
-        shedules: [
+        schedules: [
           Schedule(idJour: 0, jour: "Lundi"),
           Schedule(
               idJour: 1,
@@ -91,7 +91,7 @@ class Controller {
       leafLevel: 3,
       tagIds: [1, 2, 3, 4, 5],
       isFav: true,
-      shedules: [],
+      schedules: [],
     );
 
     var r4 = Restaurant(
@@ -106,7 +106,7 @@ class Controller {
       imageURI: "",
       leafLevel: 3,
       tagIds: [1],
-      shedules: [],
+      schedules: [],
     );
 
     var r5 = Restaurant(
@@ -122,7 +122,7 @@ class Controller {
       leafLevel: 2,
       tagIds: [1, 2],
       isFav: false,
-      shedules: [],
+      schedules: [],
     );
 
     return [r1, r2, r3, r4, r5];

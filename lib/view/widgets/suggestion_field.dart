@@ -36,7 +36,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
             text: TextSpan(
               children: [
                 TextSpan(
-                    text: widget.text,
+                    text: widget.text + " :",
                     style: Theme.of(context).primaryTextTheme.bodyMedium),
                 TextSpan(
                     text: " *",
@@ -48,8 +48,22 @@ class _SuggestionFieldState extends State<SuggestionField> {
         : Text(widget.text,
             style: Theme.of(context).primaryTextTheme.bodyMedium);
 
+    if(widget.isMultiLine){
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          textWidget,
+          Row(
+            children: [
+              createTextField(),
+            ],
+          ),
+        ],
+      );
+    }
     return Row(
-      // mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,9 +102,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
     } else {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: widget.screenRatio == 1
-            ? Expanded(child: textField)
-            : Container(
+        child: Container(
                 width: MediaQuery.of(context).size.width / widget.screenRatio,
                 child: textField,
               ),

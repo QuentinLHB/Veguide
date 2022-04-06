@@ -41,7 +41,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: AppTitle(),
       ),
       body: _isSent ? _buildThanks() : _buildForm(),
@@ -88,21 +88,21 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SuggestionField(
-                text: "Code postal",
-                hint: "59000",
-                controller: _fieldControllers[Field.postalCode]!,
-                mandatory: true,
-                isNumber: true,
-                screenRatio: 7,
-                charLimit: 5,
-              ),
-              SuggestionField(
                 text: "Ville",
                 hint: "Lille",
                 controller: _fieldControllers[Field.city]!,
                 mandatory: true,
                 screenRatio: 3,
                 charLimit: 45,
+              ),
+              SuggestionField(
+                text: "CP",
+                hint: "59000",
+                controller: _fieldControllers[Field.postalCode]!,
+                mandatory: true,
+                isNumber: true,
+                screenRatio: 7,
+                charLimit: 5,
               ),
             ],
           ),
