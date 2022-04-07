@@ -23,13 +23,13 @@ class EditRestaurantPage extends StatefulWidget {
 }
 
 class _EditRestaurantPageState extends State<EditRestaurantPage> {
-  static const SizedBox separator = const SizedBox(
-    height: 10.0,
-  );
+  // static const SizedBox separator = const SizedBox(
+  //   height: 10.0,
+  // );
 
   late Restaurant _restaurant;
 
-  String modificationString = "";
+  String _modificationString = "";
 
   bool _isSent = false;
 
@@ -40,13 +40,12 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
 
   // static const Icon editIcon = Icon(Icons.edit_note);
 
-  Widget editIcon({double? size = 24, Color? color = Colors.black}){
-    return Icon(Icons.edit_note, color: color, size: size);
+  Widget _editIcon({double? size = 24, Color? color = Colors.black}) {
+    return Icon(Icons.edit_note, color: color, size: ((size ?? 24) + 4));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _restaurant = widget.restaurant.clone();
     _leavesController =
@@ -55,7 +54,6 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("building");
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -66,16 +64,21 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
   }
 
   Widget _buildThanks() {
-    return Container();
+    return Center(
+      child: Text(_modificationString),
+    );
   }
 
   Widget _buildForm() {
+    final double padding = 8.0;
     final String popupTitle = "Modification";
     List<Widget> tagButtons = [];
     Tag.values.forEach((tag) {
       tagButtons.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: TagButton(
+          icon: tag.icon,
+          text: tag.name,
           onPressed: () {
             if (_restaurant.isTagToggled(tag)) {
               _restaurant.removeTag(tag);
@@ -105,7 +108,11 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                     hint: _restaurant.phone,
                     maxLength: 10),
                 actions: _buildPopUpButtons(() {
-                  _restaurant.phone = controller.text;
+                  if (controller.text != "" &&
+                      controller.text != _restaurant.phone) {
+                    _restaurant.phone = controller.text;
+                    _appendModificationString("Phone", _restaurant.phone);
+                  }
                 }));
           },
           icon: Icons.local_phone_rounded,
@@ -124,7 +131,11 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                   controller: controller,
                   hint: _restaurant.website ?? "Aucun site web renseigné"),
               actions: _buildPopUpButtons(() {
-                _restaurant.website = controller.text;
+                if (controller.text != "" &&
+                    controller.text != _restaurant.website) {
+                  _restaurant.website = controller.text;
+                  _appendModificationString("Website", _restaurant.website!);
+                }
               }));
         },
         icon: Icons.language_rounded,
@@ -143,230 +154,415 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                   controller: controller,
                   hint: _restaurant.fb ?? "Aucune page Facebook renseignée"),
               actions: _buildPopUpButtons(() {
-                _restaurant.fb = controller.text;
+                if (controller.text != "" &&
+                    controller.text != _restaurant.fb) {
+                  _restaurant.fb = controller.text;
+                  _appendModificationString("Facebook", _restaurant.fb!);
+                }
               }));
         },
         icon: Icons.facebook_rounded,
       ),
     );
 
-    return Center(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                // mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            RestaurantImage(
-                              imageURI: _restaurant.imageURI,
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  TextEditingController controller =
-                                      TextEditingController();
-                                  Tools.showAnimatedDialog(
-                                      context: context,
-                                      title: popupTitle,
-                                      content: _buildPopUpTextField(
-                                          controller: controller,
-                                          hint: _restaurant.imageURI ??
-                                              "Renseignez l'URL d'une image."),
-                                      actions: _buildPopUpButtons(() {
-                                        _restaurant.imageURI = controller.text;
-                                      }));
-                                },
-                                icon: editIcon(size: 50, color: Colors.white)),
-                          ],
-                        ),
-                      ],
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text("Sélectionnez sur les éléments que vous souhaitez modifier, puis cliquez sur 'Envoyer'.", style: Theme.of(context).primaryTextTheme.titleSmall,),
+        ),
+        Card(
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  // mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              RestaurantImage(
+                                imageURI: _restaurant.imageURI,
+                              ),
+                              Positioned.fill(
+                                child: IconButton(
+                                    onPressed: () {
+                                      TextEditingController controller =
+                                          TextEditingController();
+                                      Tools.showAnimatedDialog(
+                                          context: context,
+                                          title: popupTitle,
+                                          content: _buildPopUpTextField(
+                                              controller: controller,
+                                              hint: _restaurant.imageURI ??
+                                                  "Renseignez l'URL d'une image."),
+                                          actions: _buildPopUpButtons(() {
+                                            if (controller.text != "" &&
+                                                controller.text !=
+                                                    _restaurant.imageURI) {
+                                              _restaurant.imageURI =
+                                                  controller.text;
+                                              _appendModificationString(
+                                                  "Image", _restaurant.imageURI!);
+                                            }
+                                          }));
+                                    },
+                                    icon:
+                                        _editIcon(size: 50, color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 7,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        /// Restaurant's name
-                        InkWell(
-                          child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(_restaurant.name, style: Theme.of(context).primaryTextTheme.titleLarge,),
-                              editIcon(size: Theme.of(context).primaryTextTheme.titleLarge?.fontSize),
-                            ],
-                          ),
-                          onTap: () {
-                            TextEditingController controller =
-                                TextEditingController();
-                            Tools.showAnimatedDialog(
-                              context: context,
-                              title: popupTitle,
-                              content: _buildPopUpTextField(
-                                  controller: controller,
-                                  hint: _restaurant.name),
-                              actions: _buildPopUpButtons(
-                                () {
-                                  _restaurant.name = controller.text;
-                                },
-                              ),
-                            );
-                          },
-                        ),
-
-                        /// Restaurant's address.
-                        InkWell(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(_restaurant.address, style: Theme.of(context).primaryTextTheme.bodyMedium,),
-                              editIcon(size: Theme.of(context).primaryTextTheme.bodyMedium?.fontSize, color: Theme.of(context).primaryTextTheme.bodyMedium?.color),
-                            ],
-                          ),
-                          onTap: () {
-                            TextEditingController controller =
-                                TextEditingController();
-                            Tools.showAnimatedDialog(
-                              context: context,
-                              title: popupTitle,
-                              content: _buildPopUpTextField(
-                                  controller: controller,
-                                  hint: _restaurant.address),
-                              actions: _buildPopUpButtons(
-                                () {
-                                  _restaurant.address = controller.text;
-                                },
-                              ),
-                            );
-                          },
-                        ),
-
-                        InkWell(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(_restaurant.cityCode + " ", style: Theme.of(context).primaryTextTheme.bodyMedium),
-                              Text(_restaurant.city, style: Theme.of(context).primaryTextTheme.bodyMedium),
-                              editIcon(size: Theme.of(context).primaryTextTheme.bodyMedium?.fontSize, color: Theme.of(context).primaryTextTheme.bodyMedium?.color),
-                            ],
-                          ),
-                          onTap: () {
-                            TextEditingController cityCodeController =
-                                TextEditingController();
-                            TextEditingController cityController =
-                                TextEditingController();
-
-                            Tools.showAnimatedDialog(
-                              context: context,
-                              title: popupTitle,
-                              content: Column(
+                    Flexible(
+                      flex: 7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          /// Restaurant's name
+                          Padding(
+                            padding: EdgeInsets.only(bottom: padding),
+                            child: InkWell(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Code postal :"),
-                                      Expanded(
-                                        child: _buildPopUpTextField(
-                                            controller: cityCodeController,
-                                            hint: _restaurant.cityCode,
-                                        inputType: TextInputType.number,
-                                        maxLength: 5),
-                                      ),
-                                    ],
+                                  Text(
+                                    _restaurant.name,
+                                    style: Theme.of(context)
+                                        .primaryTextTheme
+                                        .titleLarge,
                                   ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Ville :"),
-                                      Expanded(
-                                        child: _buildPopUpTextField(
-                                            controller: cityController,
-                                            hint: _restaurant.city),
-                                      ),
-                                    ],
-                                  ),
-                                // Text("tets"),
+                                  _editIcon(
+                                      size: Theme.of(context)
+                                          .primaryTextTheme
+                                          .titleLarge
+                                          ?.fontSize,
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .titleLarge
+                                          ?.color),
                                 ],
                               ),
-                              actions: _buildPopUpButtons(
-                                () {
-                                  _restaurant.cityCode =
-                                      cityCodeController.text;
-                                  _restaurant.city = cityController.text;
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                              onTap: () {
+                                TextEditingController controller =
+                                    TextEditingController();
+                                Tools.showAnimatedDialog(
+                                  context: context,
+                                  title: popupTitle,
+                                  content: _buildPopUpTextField(
+                                    maxLength: 50,
+                                      controller: controller,
+                                      hint: _restaurant.name),
+                                  actions: _buildPopUpButtons(
+                                    () {
+                                      if (controller.text != "" &&
+                                          controller.text != _restaurant.name) {
+                                        _restaurant.name = controller.text;
+                                        _appendModificationString(
+                                            "Image", _restaurant.name);
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
 
-                        Leaves(leavesController: _leavesController),
+                          /// Restaurant's address.
+                          Padding(
+                            padding: EdgeInsets.only(bottom: padding),
+                            child: InkWell(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    _restaurant.address,
+                                    style: Theme.of(context)
+                                        .primaryTextTheme
+                                        .bodyMedium,
+                                  ),
+                                  _editIcon(
+                                      size: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium
+                                          ?.fontSize,
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium
+                                          ?.color),
+                                ],
+                              ),
+                              onTap: () {
+                                TextEditingController controller =
+                                    TextEditingController();
+                                Tools.showAnimatedDialog(
+                                  context: context,
+                                  title: popupTitle,
+                                  content: _buildPopUpTextField(
+                                    maxLength: 200,
+                                      controller: controller,
+                                      hint: _restaurant.address),
+
+                                  actions: _buildPopUpButtons(
+                                    () {
+                                      if (controller.text != "" &&
+                                          controller.text !=
+                                              _restaurant.address) {
+                                        _restaurant.address = controller.text;
+                                        _appendModificationString(
+                                            "Image", _restaurant.address);
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.only(bottom: padding),
+                            child: InkWell(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(_restaurant.cityCode + " ",
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium),
+                                  Text(_restaurant.city,
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium),
+                                  _editIcon(
+                                      size: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium
+                                          ?.fontSize,
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyMedium
+                                          ?.color),
+                                ],
+                              ),
+                              onTap: () {
+                                TextEditingController cityCodeController =
+                                    TextEditingController();
+                                TextEditingController cityController =
+                                    TextEditingController();
+
+                                Tools.showAnimatedDialog(
+                                  context: context,
+                                  title: popupTitle,
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 5.0),
+                                            child: Text("Code postal :"),
+                                          ),
+                                          Expanded(
+                                            child: _buildPopUpTextField(
+                                                controller: cityCodeController,
+                                                hint: _restaurant.cityCode,
+                                                inputType: TextInputType.number,
+                                                maxLength: 5),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 5.0),
+                                            child: Text("Ville :"),
+                                          ),
+                                          Expanded(
+                                            child: _buildPopUpTextField(
+                                              maxLength: 45,
+                                                controller: cityController,
+                                                hint: _restaurant.city),
+                                          ),
+                                        ],
+                                      ),
+                                      // Text("tets"),
+                                    ],
+                                  ),
+                                  actions: _buildPopUpButtons(
+                                    () {
+                                      if (cityCodeController.text != "" &&
+                                          cityCodeController.text !=
+                                              _restaurant.cityCode) {
+                                        _restaurant.cityCode =
+                                            cityCodeController.text;
+                                        _appendModificationString(
+                                            "Code postal", _restaurant.cityCode);
+                                      }
+                                      if (cityController.text != "" &&
+                                          cityController.text !=
+                                              _restaurant.address) {
+                                        _restaurant.city = cityController.text;
+                                        _appendModificationString(
+                                            "Code postal", _restaurant.city);
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          Leaves(leavesController: _leavesController),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                /// Horaires
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: InkWell(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.watch_later_outlined,
+                          color: deepGreen,
+                          size: 28,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "Heures d'ouverture",
+                          style: Theme.of(context).primaryTextTheme.titleMedium,
+                        ),
                       ],
                     ),
+                    onTap: () {
+                      //todo horaires ici
+                      // TextEditingController controller = TextEditingController();
+                      // Tools.showAnimatedDialog(context: context, title: popupTitle, content:
+                      // _buildPopUpTextField(controller:controller, hint: _restaurant.address),
+                      //   actions: _buildPopUpButtons(() {
+                      //     _restaurant.address = controller.text;
+                      //   },),);
+                    },
                   ),
-                ],
-              ),
+                ),
 
-              /// Horaires
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: InkWell(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.watch_later_outlined,
-                        color: deepGreen,
-                        size: 28,
+                Wrap(children: contactButtons),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: InkWell(
+                      child: Container(
+                        color: deepGreen.withOpacity(0.2),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  _restaurant.desc,
+                                  style: italicGreen,
+                                ),
+                              ),
+                            ),
+                            _editIcon(color: deepGreen)
+                          ],
+                        ),
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Heures d'ouverture",
-                        style: Theme.of(context).primaryTextTheme.titleMedium,
-                      ),
-                    ],
+                      onTap: () {
+                        TextEditingController controller =
+                            TextEditingController();
+                        Tools.showAnimatedDialog(
+                            context: context,
+                            title: popupTitle,
+                            content: _buildPopUpTextField(
+                                controller: controller,
+                                hint: _restaurant.desc,
+                                maxLength: 500,
+                                isMultiLine: true),
+                            actions: _buildPopUpButtons(() {
+                              if (controller.text != "" &&
+                                  controller.text != _restaurant.desc) {
+                                _restaurant.desc = controller.text;
+                                _appendModificationString(
+                                    "Description", _restaurant.desc);
+                              }
+                            }));
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    //todo horaires ici
-                    // TextEditingController controller = TextEditingController();
-                    // Tools.showAnimatedDialog(context: context, title: popupTitle, content:
-                    // _buildPopUpTextField(controller:controller, hint: _restaurant.address),
-                    //   actions: _buildPopUpButtons(() {
-                    //     _restaurant.address = controller.text;
-                    //   },),);
-                  },
                 ),
-              ),
-
-              Wrap(children: contactButtons),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-                child: Text(
-                  _restaurant.desc,
-                  style: italicGreen,
+                Wrap(
+                  children: tagButtons,
                 ),
-              ),
-              Wrap(
-                children: tagButtons,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SuggestionField(text: "Commentaire (optionnel)", hint: "Commentaire à l'intention de l'administrateur de l'application", controller: _commentController, isMultiLine: true, charLimit: 500,),
+        ),
+
+        /// Send button
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ElevatedButton(
+              onPressed: () {
+                for (Tag tag in Tag.values) {
+                  if (widget.restaurant.isTagToggled(tag) &&
+                      !_restaurant.isTagToggled(tag)) {
+                    _appendModificationString("Tag retiré", tag.name);
+                  } else if (_restaurant.isTagToggled(tag) &&
+                      !widget.restaurant.isTagToggled(tag)) {
+                    _appendModificationString("Tag ajouté", tag.name);
+                  }
+                }
+
+                if (_leavesController.leafLevel !=
+                    widget.restaurant.leafLevel) {
+                  _appendModificationString(
+                      "Leaf level", _leavesController.leafLevel.toString());
+                }
+
+                setState(() {
+                  _isSent = true;
+                });
+              },
+              child: Text("Envoyer")),
+        ),
+      ],
     );
   }
+
+  TextEditingController _commentController = TextEditingController();
 
   Widget createContactButton({
     required VoidCallback onPressed,
@@ -402,12 +598,13 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
           {required TextEditingController controller,
           TextInputType inputType = TextInputType.text,
           required String hint,
-          int maxLength = 100}) =>
+          int maxLength = 100,
+          bool isMultiLine = false}) =>
       TextField(
         controller: controller,
         maxLength: maxLength,
         keyboardType: inputType,
-        maxLines: 1,
+        maxLines: isMultiLine ? 5 : 1,
         decoration: InputDecoration(
             isDense: true,
             contentPadding: EdgeInsets.zero,
@@ -431,6 +628,10 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
           child: const Text('OK'),
         ),
       ];
+
+  void _appendModificationString(String key, String value) {
+    _modificationString += "$key : $value\n";
+  }
 
 // Future<TimeOfDay?> _selectTime(BuildContext context, TimeOfDay? initialTime) async {
 //   final TimeOfDay? selectedTimeOfDay = await showTimePicker(

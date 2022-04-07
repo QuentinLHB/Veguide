@@ -119,7 +119,11 @@ class Restaurant {
 
   /// Creates a clone instance of [this].
   Restaurant clone(){
-    return Restaurant._(_id, _name, _desc, _website, _fb, _phone, _address, _cityCode, _city, _imageURI, _leafLevel, _tags, _schedules, isFav);
+    List<Schedule> schedules = [];
+    _schedules.forEach((element) {
+      schedules.add(element.clone());
+    });
+    return Restaurant._(_id, _name, _desc, _website, _fb, _phone, _address, _cityCode, _city, _imageURI, _leafLevel, List.from(_tags), schedules, isFav);
   }
 
   /// Returns true when the [tag] exists in the [_restaurant]'s [Tag] list.

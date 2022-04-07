@@ -45,7 +45,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
               ],
             ),
           )
-        : Text(widget.text,
+        : Text(widget.text + " :",
             style: Theme.of(context).primaryTextTheme.bodyMedium);
 
     if(widget.isMultiLine){
@@ -53,7 +53,10 @@ class _SuggestionFieldState extends State<SuggestionField> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          textWidget,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: textWidget,
+          ),
           Row(
             children: [
               createTextField(),
@@ -89,7 +92,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
           isDense: true,
           contentPadding: EdgeInsets.zero,
           hintText: widget.hint,
-          hintStyle: TextStyle(fontSize: 14)),
+          hintStyle: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.4))),
     );
 
     if (widget.screenRatio == 1) {
