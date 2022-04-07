@@ -11,6 +11,7 @@ import 'package:veguide/view/widgets/expandable_tag_button.dart';
 import 'package:veguide/view/widgets/fav_button.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:veguide/view/widgets/restaurant_image.dart';
 
 class RestaurantsExpandableList extends StatefulWidget {
   RestaurantsExpandableList({Key? key, required this.restaurants})
@@ -71,37 +72,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                   padding: const EdgeInsets.all(10.0),
 
                   /// Shadow box beneath the image.
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.4),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: Offset(3, 4), // changes position of shadow
-                        ),
-                      ],
-                    ),
-
-                    /// Restaurant's image.
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: restau.imageURI != null &&
-                                  restau.imageURI!.isNotEmpty
-                              ? FadeInImage.assetNetwork(
-                                  placeholder: 'assets/icons/icon.jpg',
-                                  imageErrorBuilder: (context, object, trace) {
-                                    return Image.asset('assets/icons/icon.jpg');
-                                  },
-                                  image: restau.imageURI!)
-                              : Image.asset('assets/icons/icon.jpg'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: RestaurantImage(imageURI: restau.imageURI,),
                 ),
               ),
 
@@ -311,7 +282,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
             text: TextSpan(
               children: [
                 TextSpan(
-                    text: schedule.jour + " : ",
+                    text: schedule.day + " : ",
                     style: Theme.of(context).primaryTextTheme.bodyLarge),
                 TextSpan(text: schedule.getHours(), style: Theme.of(context).primaryTextTheme.bodyMedium),
               ],

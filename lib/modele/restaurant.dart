@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
+import 'package:collection/collection.dart';
 
 /// Stores a restaurant's data.
 class Restaurant {
@@ -116,5 +117,71 @@ class Restaurant {
     if(isFav != null) _isFav = isFav;
   }
 
+  /// Creates a clone instance of [this].
+  Restaurant clone(){
+    return Restaurant._(_id, _name, _desc, _website, _fb, _phone, _address, _cityCode, _city, _imageURI, _leafLevel, _tags, _schedules, isFav);
+  }
 
+  /// Returns true when the [tag] exists in the [_restaurant]'s [Tag] list.
+  bool isTagToggled(Tag tag){
+    return _tags.firstWhereOrNull((Tag restauTag) {
+      return restauTag == tag;
+    }) != null;
+  }
+
+  void removeTag(Tag tag){
+    _tags.remove(tag);
+  }
+
+  void addTag(Tag tag){
+    _tags.add(tag);
+  }
+
+  set name(String value) {
+    _name = value;
+  }
+
+  set schedules(List<Schedule> value) {
+    _schedules = value;
+  }
+
+  set tags(List<Tag> value) {
+    _tags = value;
+  }
+
+  set leafLevel(int value) {
+    _leafLevel = value;
+  }
+
+  set imageURI(String? value) {
+    _imageURI = value;
+  }
+
+  set city(String value) {
+    _city = value;
+  }
+
+  set cityCode(String value) {
+    _cityCode = value;
+  }
+
+  set address(String value) {
+    _address = value;
+  }
+
+  set phone(String value) {
+    _phone = value;
+  }
+
+  set fb(String? value) {
+    _fb = value;
+  }
+
+  set website(String? value) {
+    _website = value;
+  }
+
+  set desc(String value) {
+    _desc = value;
+  }
 }

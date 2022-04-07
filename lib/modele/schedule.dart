@@ -22,7 +22,7 @@ class Schedule {
         idJour, jour, opensAtAM, closesAtAM, opensAtPM, closesAtPM);
   }
 
-  String get jour => _jour;
+  String get day => _jour;
 
   TimeOfDay? get opensAtAM => _opensAtAM;
 
@@ -44,11 +44,6 @@ class Schedule {
   }
 
   String getHours() {
-    String _reformat(int value) {
-      if (value < 10) return '0$value';
-      return value.toString();
-    }
-
     String? morning;
     String? afternoon;
     String result = "";
@@ -72,5 +67,48 @@ class Schedule {
     if (morning != null && afternoon != null) result += " / ";
 
     return result + (afternoon ?? "");
+  }
+
+  String _reformat(int value) {
+    if (value < 10) return '0$value';
+    return value.toString();
+  }
+
+  String get amHours{
+    if (_opensAtAM != null && _closesAtAM != null) {
+      return
+      "${_reformat(_opensAtAM!.hour)}:${_reformat(_opensAtAM!.minute)} - ${_reformat(_closesAtAM!.hour)}:${_reformat(_opensAtAM!.minute)}";
+    }else{
+      return "-";
+    }
+  }
+
+  String get pmHours{
+    if (_opensAtPM != null && _closesAtPM != null) {
+      return "${_reformat(_opensAtPM!.hour)}:${_reformat(_opensAtPM!.minute)} - ${_reformat(_closesAtPM!.hour)}:${_reformat(_opensAtPM!.minute)}";
+    }else{
+      return "-";
+    }
+  }
+
+  /// Creates a deep copy of [this].
+  Schedule clone(){
+    return Schedule(idJour: _idJour, jour: _jour, opensAtAM: _opensAtAM, closesAtAM: _closesAtAM, opensAtPM:_opensAtPM, closesAtPM: _closesAtPM);
+  }
+
+  set opensAtAM(TimeOfDay? value) {
+    _opensAtAM = value;
+  }
+
+  set closesAtPM(TimeOfDay? value) {
+    _closesAtPM = value;
+  }
+
+  set opensAtPM(TimeOfDay? value) {
+    _opensAtPM = value;
+  }
+
+  set closesAtAM(TimeOfDay? value) {
+    _closesAtAM = value;
   }
 }
