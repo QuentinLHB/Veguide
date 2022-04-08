@@ -188,4 +188,12 @@ class Restaurant {
   set desc(String value) {
     _desc = value;
   }
+
+  String get scheduleDisplay{
+    String display = "";
+    for(Schedule schedule in _schedules){
+      display += schedule.toString() + "\n";
+    }
+    return display;
+  }
 }

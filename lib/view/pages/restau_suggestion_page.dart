@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:veguide/controller/leaves_controller.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/app_title.dart';
+import 'package:veguide/view/widgets/ask_email.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:veguide/view/widgets/suggestion_field.dart';
 import 'package:veguide/view/widgets/tag_button.dart';
+import 'package:veguide/view/widgets/thanks_widget.dart';
 
 class RestaurantSuggestionPage extends StatefulWidget {
   const RestaurantSuggestionPage({Key? key}) : super(key: key);
@@ -22,8 +25,8 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
   LeavesController _leavesController =
       LeavesController(leafLevel: 1, clickable: true);
   final Map<Tag, bool> _tagsToggles = {};
-
   bool _isSent = false;
+  bool _checkBoxValue = false;
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
         centerTitle: true,
         title: AppTitle(),
       ),
-      body: _isSent ? _buildThanks() : _buildForm(),
+      body: _isSent ? ThanksWidget() : _buildForm(),
     );
   }
 
@@ -62,7 +65,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
               children: [
                 Text(
                   "Vous connaissez un restaurant non-répertorié sur l'application ? Proposez-le !",
-                  style: Theme.of(context).primaryTextTheme.titleMedium,
+                  style: Theme.of(context).primaryTextTheme.titleSmall,
                 ),
                 SizedBox(height: 5,),
                 Text(
@@ -163,13 +166,16 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
             isMultiLine: true,
             charLimit: 500,
           ),
-          SuggestionField(
-            text: "Votre email",
-            hint: "utilisateur@gmail.com",
-            controller: _fieldControllers[Field.email]!,
-            mandatory: true,
-            charLimit: 50,
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0, bottom: 12),
+            child: AskEmail(onTap: (){
+              setState(() {
+                _checkBoxValue = !_checkBoxValue;
+              });
+              },
+            emailFieldController: _fieldControllers[Field.email]!,)
           ),
+
           Center(
             child: ElevatedButton(
               child: Text("Envoyer"),
@@ -178,7 +184,8 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
                     _fieldControllers[Field.address]!.text.isEmpty ||
                     _fieldControllers[Field.postalCode]!.text.isEmpty ||
                     _fieldControllers[Field.city]!.text.isEmpty ||
-                    _fieldControllers[Field.email]!.text.isEmpty) {
+                    (_checkBoxValue && _fieldControllers[Field.email]!.text.isEmpty)
+                    ) {
                   Tools.showAnimatedDialog(
                       context: context,
                       title: "Champs incomplets",
@@ -203,39 +210,6 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
           )
         ],
       ),
-    );
-  }
-
-  Widget _buildThanks() {
-    return Column(
-      // mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(
-          child: Text(
-            "Merci pour votre suggestion !",
-            style: styleH2,
-          ),
-        ),
-        SizedBox(
-          height: 7,
-        ),
-        Center(
-          child: Text(
-            "Un email vous sera envoyé dès qu'elle sera traitée.",
-            style: styleH4,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Retour à l'application")),
-        )
-      ],
     );
   }
 

@@ -41,7 +41,7 @@ class _ExpandableTagButtonState extends State<ExpandableTagButton>
         ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
           child: AnimatedContainer(
-            color: deepGreen,
+            color: Theme.of(context).primaryColor,
             width: width,
             duration: Duration(milliseconds: 300),
             curve: Curves.decelerate,

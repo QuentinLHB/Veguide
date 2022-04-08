@@ -37,8 +37,8 @@ class _TagButtonState extends State<TagButton> {
       ),
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(widget.isToggled ? deepGreen : grey),
-        foregroundColor: MaterialStateProperty.all<Color>(widget.isToggled ? grey : deepGreen),
+            MaterialStateProperty.all<Color>(widget.isToggled ? Theme.of(context).primaryColor : grey),
+        foregroundColor: MaterialStateProperty.all<Color>(widget.isToggled ? grey : Theme.of(context).primaryColor),
       ),
 
 

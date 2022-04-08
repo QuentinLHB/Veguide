@@ -87,15 +87,15 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                     children: [
                       Text(
                         restau.name,
-                        style: styleH2,
+                        style: Theme.of(context).primaryTextTheme.titleLarge,
                       ),
                       Text(
                         restau.address,
-                        style: styleH6,
+                        style: Theme.of(context).primaryTextTheme.bodyMedium,
                       ),
                       Text(
                         restau.cityCode + " " + restau.city,
-                        style: styleH6,
+                        style: Theme.of(context).primaryTextTheme.bodyMedium,
                       ),
                       Leaves(
                         leavesController:
@@ -154,7 +154,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
               children: [
                 Icon(
                   Icons.watch_later_outlined,
-                  color: deepGreen,
+                  color: Theme.of(context).primaryColor,
                   size: 28,
                 ),
                 SizedBox(
@@ -176,7 +176,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
           child: Text(
             restaurant.desc,
-            style: italicGreen,
+            style: Theme.of(context).primaryTextTheme.labelSmall,
           ),
         ),
         Wrap(

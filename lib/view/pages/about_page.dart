@@ -5,27 +5,66 @@ import 'package:veguide/view/widgets/fav_button.dart';
 import 'package:veguide/view/styles.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  AboutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: AppTitle(),
       ),
-      body:
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("A propos :", style: styleH3),
-          ),
-          Text("Veguide est une application gratuite au service de la communauté végane. "
-              "Elle a été développée par Quentin Lehembre.")
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("A propos :", style: Theme.of(context).primaryTextTheme.titleMedium),
+            SizedBox(height: 10,),
+            RichText(
+              text: TextSpan(
+                children: [
+                  buildTextSpan(
+                      context: context, highlight: true, text: "Veguide"),
+                  buildTextSpan(
+                      context: context,
+                      highlight: false,
+                      text: " est une application "),
+                  buildTextSpan(
+                      context: context, highlight: true, text: "gratuite "),
+                  buildTextSpan(
+                      context: context,
+                      highlight: false,
+                      text: "au service de la communauté végane. \n"
+                          "Son but est de faciliter la "),
+                  buildTextSpan(
+                      context: context,
+                      highlight: true,
+                      text: "recherches de points de restauration végans "),
+                  buildTextSpan(
+                      context: context,
+                      highlight: false,
+                      text: "selon vos exigeances, sans avoir à décortiquer les menus et avis en amont.\n"
+                          "Si l'application vous plait, ou si vous avez des suggestions, faites-le nous savoir dans la section "),
+                  buildTextSpan(
+                      context: context, highlight: true, text: "Contact"),
+                  buildTextSpan(context: context, highlight: false, text: "."),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  TextSpan buildTextSpan(
+          {required BuildContext context,
+          required bool highlight,
+          required text}) =>
+      TextSpan(
+          text: text,
+          style: highlight
+              ? Theme.of(context).primaryTextTheme.bodyLarge
+              : Theme.of(context).primaryTextTheme.bodyMedium);
 }

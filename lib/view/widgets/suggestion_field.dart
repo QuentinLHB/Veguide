@@ -92,7 +92,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
           isDense: true,
           contentPadding: EdgeInsets.zero,
           hintText: widget.hint,
-          hintStyle: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.4))),
+          hintStyle: TextStyle(fontSize: 14, color: Theme.of(context).hintColor)),
     );
 
     if (widget.screenRatio == 1) {

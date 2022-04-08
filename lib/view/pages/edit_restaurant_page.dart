@@ -7,11 +7,13 @@ import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 import 'package:veguide/view/widgets/app_title.dart';
 import 'package:veguide/view/styles.dart';
+import 'package:veguide/view/widgets/ask_email.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:veguide/view/widgets/restaurant_image.dart';
 import 'package:veguide/view/widgets/suggestion_field.dart';
 import 'package:veguide/view/widgets/tag_button.dart';
 import 'package:collection/collection.dart';
+import 'package:veguide/view/widgets/thanks_widget.dart';
 
 class EditRestaurantPage extends StatefulWidget {
   EditRestaurantPage({Key? key, required this.restaurant}) : super(key: key);
@@ -29,16 +31,24 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
 
   late Restaurant _restaurant;
 
-  String _modificationString = "";
+  Map<String, String> _modifications = {};
+
+  get _modificationString {
+    String modifs = "";
+    _modifications.forEach((key, value) {
+      modifs += "$key : $value\n";
+    });
+    return modifs;
+  }
 
   bool _isSent = false;
 
-  Category? _dropDownValue;
-  List<Schedule> schedules = [];
+  // List<Schedule> schedules = [];
 
   late LeavesController _leavesController;
+  bool _checkBoxValue = false;
 
-  // static const Icon editIcon = Icon(Icons.edit_note);
+  String _schedules = "";
 
   Widget _editIcon({double? size = 24, Color? color = Colors.black}) {
     return Icon(Icons.edit_note, color: color, size: ((size ?? 24) + 4));
@@ -50,6 +60,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
     _restaurant = widget.restaurant.clone();
     _leavesController =
         LeavesController(clickable: true, leafLevel: _restaurant.leafLevel);
+    _schedules = _restaurant.scheduleDisplay;
   }
 
   @override
@@ -59,13 +70,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
         centerTitle: true,
         title: AppTitle(),
       ),
-      body: _isSent ? _buildThanks() : _buildForm(),
-    );
-  }
-
-  Widget _buildThanks() {
-    return Center(
-      child: Text(_modificationString),
+      body: _isSent ? ThanksWidget() : _buildForm(),
     );
   }
 
@@ -169,12 +174,16 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
       children: [
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text("Sélectionnez sur les éléments que vous souhaitez modifier, puis cliquez sur 'Envoyer'.", style: Theme.of(context).primaryTextTheme.titleSmall,),
+          child: Text(
+            "Sélectionnez sur les éléments que vous souhaitez modifier, puis cliquez sur 'Envoyer'.",
+            style: Theme.of(context).primaryTextTheme.titleSmall,
+          ),
         ),
         Card(
           elevation: 3,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -208,13 +217,13 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                                     _restaurant.imageURI) {
                                               _restaurant.imageURI =
                                                   controller.text;
-                                              _appendModificationString(
-                                                  "Image", _restaurant.imageURI!);
+                                              _appendModificationString("Image",
+                                                  _restaurant.imageURI!);
                                             }
                                           }));
                                     },
-                                    icon:
-                                        _editIcon(size: 50, color: Colors.white)),
+                                    icon: _editIcon(
+                                        size: 50, color: Colors.white)),
                               ),
                             ],
                           ),
@@ -258,7 +267,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                   context: context,
                                   title: popupTitle,
                                   content: _buildPopUpTextField(
-                                    maxLength: 50,
+                                      maxLength: 50,
                                       controller: controller,
                                       hint: _restaurant.name),
                                   actions: _buildPopUpButtons(
@@ -267,7 +276,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                           controller.text != _restaurant.name) {
                                         _restaurant.name = controller.text;
                                         _appendModificationString(
-                                            "Image", _restaurant.name);
+                                            "Nom", _restaurant.name);
                                       }
                                     },
                                   ),
@@ -307,10 +316,9 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                   context: context,
                                   title: popupTitle,
                                   content: _buildPopUpTextField(
-                                    maxLength: 200,
+                                      maxLength: 200,
                                       controller: controller,
                                       hint: _restaurant.address),
-
                                   actions: _buildPopUpButtons(
                                     () {
                                       if (controller.text != "" &&
@@ -318,7 +326,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                               _restaurant.address) {
                                         _restaurant.address = controller.text;
                                         _appendModificationString(
-                                            "Image", _restaurant.address);
+                                            "Address", _restaurant.address);
                                       }
                                     },
                                   ),
@@ -372,7 +380,8 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 5.0),
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
                                             child: Text("Code postal :"),
                                           ),
                                           Expanded(
@@ -392,12 +401,13 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 5.0),
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
                                             child: Text("Ville :"),
                                           ),
                                           Expanded(
                                             child: _buildPopUpTextField(
-                                              maxLength: 45,
+                                                maxLength: 45,
                                                 controller: cityController,
                                                 hint: _restaurant.city),
                                           ),
@@ -413,15 +423,15 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                               _restaurant.cityCode) {
                                         _restaurant.cityCode =
                                             cityCodeController.text;
-                                        _appendModificationString(
-                                            "Code postal", _restaurant.cityCode);
+                                        _appendModificationString("Code postal",
+                                            _restaurant.cityCode);
                                       }
                                       if (cityController.text != "" &&
                                           cityController.text !=
                                               _restaurant.address) {
                                         _restaurant.city = cityController.text;
                                         _appendModificationString(
-                                            "Code postal", _restaurant.city);
+                                            "Ville", _restaurant.city);
                                       }
                                     },
                                   ),
@@ -446,7 +456,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                       children: [
                         Icon(
                           Icons.watch_later_outlined,
-                          color: deepGreen,
+                          color: Theme.of(context).primaryColor,
                           size: 28,
                         ),
                         SizedBox(
@@ -459,26 +469,32 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                       ],
                     ),
                     onTap: () {
-                      //todo horaires ici
-                      // TextEditingController controller = TextEditingController();
-                      // Tools.showAnimatedDialog(context: context, title: popupTitle, content:
-                      // _buildPopUpTextField(controller:controller, hint: _restaurant.address),
-                      //   actions: _buildPopUpButtons(() {
-                      //     _restaurant.address = controller.text;
-                      //   },),);
+                      TextEditingController controller = TextEditingController();
+                      controller.text = _schedules;
+                      List<Widget> popUpButtons = _buildPopUpButtons(() {
+                        if(controller.text != _schedules){
+                          _schedules = controller.text;
+                          _appendModificationString("Schedule", controller.text);
+                        }
+                      },);
+                      popUpButtons.insert(0, IconButton(onPressed:  (){controller.text = "";}, icon: Icon(Icons.delete, size: 30, color: Theme.of(context).primaryColor,))
+                      );
+                      Tools.showAnimatedDialog(context: context, title: popupTitle, content:
+                      _buildPopUpTextField(controller:controller, hint: "", maxLines: 8, maxLength: 500),
+                        actions:popUpButtons,);
                     },
                   ),
                 ),
 
                 Wrap(children: contactButtons),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 5.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: InkWell(
                       child: Container(
-                        color: deepGreen.withOpacity(0.2),
+                        color: Theme.of(context).primaryColor.withOpacity(0.2),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -487,11 +503,13 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   _restaurant.desc,
-                                  style: italicGreen,
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .labelSmall,
                                 ),
                               ),
                             ),
-                            _editIcon(color: deepGreen)
+                            _editIcon(color: Theme.of(context).primaryColor)
                           ],
                         ),
                       ),
@@ -505,7 +523,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                 controller: controller,
                                 hint: _restaurant.desc,
                                 maxLength: 500,
-                                isMultiLine: true),
+                                maxLines: 5),
                             actions: _buildPopUpButtons(() {
                               if (controller.text != "" &&
                                   controller.text != _restaurant.desc) {
@@ -528,7 +546,26 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
 
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: SuggestionField(text: "Commentaire (optionnel)", hint: "Commentaire à l'intention de l'administrateur de l'application", controller: _commentController, isMultiLine: true, charLimit: 500,),
+          child: SuggestionField(
+            text: "Commentaire (optionnel)",
+            hint:
+                "Commentaire à l'intention de l'administrateur de l'application",
+            controller: _commentController,
+            isMultiLine: true,
+            charLimit: 500,
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(left: 10, bottom: 10.0),
+          child: AskEmail(
+            onTap: () {
+              setState(() {
+                _checkBoxValue = !_checkBoxValue;
+              });
+            },
+            emailFieldController: _emailController,
+          ),
         ),
 
         /// Send button
@@ -539,10 +576,10 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                 for (Tag tag in Tag.values) {
                   if (widget.restaurant.isTagToggled(tag) &&
                       !_restaurant.isTagToggled(tag)) {
-                    _appendModificationString("Tag retiré", tag.name);
+                    _appendModificationString("Tag removed", tag.name);
                   } else if (_restaurant.isTagToggled(tag) &&
                       !widget.restaurant.isTagToggled(tag)) {
-                    _appendModificationString("Tag ajouté", tag.name);
+                    _appendModificationString("Tag added", tag.name);
                   }
                 }
 
@@ -552,9 +589,31 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                       "Leaf level", _leavesController.leafLevel.toString());
                 }
 
-                setState(() {
-                  _isSent = true;
-                });
+                if (_commentController.text.isNotEmpty) {
+                  _appendModificationString("Comment", _commentController.text);
+                }
+
+                if (_modifications.isNotEmpty) {
+                  print(_modificationString);
+                  // TODO back end goes here.
+                  setState(() {
+                    _isSent = true;
+                  });
+                } else {
+                  Tools.showAnimatedDialog(
+                      context: context,
+                      title: "Envoi impossible",
+                      content: Text("Aucun changement n'a été enregistré."),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            setState(() {});
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ]);
+                }
               },
               child: Text("Envoyer")),
         ),
@@ -563,6 +622,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
   }
 
   TextEditingController _commentController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
 
   Widget createContactButton({
     required VoidCallback onPressed,
@@ -599,12 +659,12 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
           TextInputType inputType = TextInputType.text,
           required String hint,
           int maxLength = 100,
-          bool isMultiLine = false}) =>
+          int maxLines = 1}) =>
       TextField(
         controller: controller,
         maxLength: maxLength,
         keyboardType: inputType,
-        maxLines: isMultiLine ? 5 : 1,
+        maxLines: maxLines,
         decoration: InputDecoration(
             isDense: true,
             contentPadding: EdgeInsets.zero,
@@ -630,7 +690,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
       ];
 
   void _appendModificationString(String key, String value) {
-    _modificationString += "$key : $value\n";
+    _modifications[key] = value;
   }
 
 // Future<TimeOfDay?> _selectTime(BuildContext context, TimeOfDay? initialTime) async {

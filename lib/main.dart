@@ -18,15 +18,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: Colors.green[700], secondary: Colors.green.shade700),
         primaryTextTheme: TextTheme(
-          titleLarge: TextStyle(
-              fontSize: 20, color: deepGreen, fontWeight: FontWeight.bold),
-          titleMedium: TextStyle(
-            color: Colors.green.shade700, fontSize: 16
-          ),
+            headlineLarge:TextStyle(fontSize: 28, fontFamily: 'SweetyRasty', color: Colors.white),
+          titleLarge: TextStyle(fontSize: 20, color: Colors.green.shade700, fontWeight: FontWeight.bold),
+          titleMedium: TextStyle(color: Colors.green.shade700, fontSize: 16),
           titleSmall: TextStyle(color: Colors.green.shade700, fontSize: 15, fontStyle: FontStyle.italic),
           bodyLarge: TextStyle(color: Colors.green.shade700, fontSize: 15),
           bodyMedium: TextStyle(color: Colors.black, fontSize: 15),
+            labelSmall: TextStyle(fontSize: 14, color: Colors.green.shade700, fontStyle: FontStyle.italic),
         ),
+        primaryColor: Colors.green.shade700,
+        hintColor: Colors.black.withOpacity(0.4),
+        unselectedWidgetColor: Colors.green.shade700,
       ),
       home: const Root(title: 'Veguide'),
     );

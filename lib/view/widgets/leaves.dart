@@ -93,8 +93,8 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
           scale: _animControllers[level]!,
           child: Icon(Icons.eco_rounded,
             color: widget.leavesController.leafLevel >= level
-                ? deepGreen
-                : black,
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).hintColor,
             size: size,
           ),
         ),
@@ -112,8 +112,8 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
   Widget _createStaticLeaf(int level) =>
       Icon(Icons.eco_rounded,
         color: widget.leavesController.leafLevel >= level
-            ? deepGreen // Selected
-            : black,
+            ? Theme.of(context).primaryColor // Selected
+            : Theme.of(context).hintColor,
         size: size, // Not selected
       );
 

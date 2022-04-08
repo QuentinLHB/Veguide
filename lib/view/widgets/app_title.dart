@@ -6,11 +6,9 @@ class AppTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "Veguide",
-        style: styleH1,
-      ),
+    return Text(
+      "Veguide",
+      style: Theme.of(context).primaryTextTheme.headlineLarge,
     );
   }
 }

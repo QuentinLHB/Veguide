@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
             header: Center(
                 child: Text(
               "Rechercher un restaurant",
-              style: styleH3,
+              style: Theme.of(context).primaryTextTheme.titleMedium,
             )),
             expanded: Column(
               children: [
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(deepGreen),
+                                MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
                             foregroundColor:
                                 MaterialStateProperty.all<Color>(grey)),
                       ),
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(grey),
                             foregroundColor:
-                                MaterialStateProperty.all<Color>(deepGreen)),
+                                MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)),
                       ),
                     ),
                     //
@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
           child: Icon(
             tag.icon,
             size: 30,
-            color: deepGreen,
+            color: Theme.of(context).primaryColor,
           ),
         ));
       }
@@ -217,7 +217,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
             child: Text(
               "Ville : " + _cityTextFieldController.text,
-              style: styleH4,
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
           ),
           wrap,
