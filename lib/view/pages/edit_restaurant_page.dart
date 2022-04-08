@@ -469,19 +469,40 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                       ],
                     ),
                     onTap: () {
-                      TextEditingController controller = TextEditingController();
+                      TextEditingController controller =
+                          TextEditingController();
                       controller.text = _schedules;
-                      List<Widget> popUpButtons = _buildPopUpButtons(() {
-                        if(controller.text != _schedules){
-                          _schedules = controller.text;
-                          _appendModificationString("Schedule", controller.text);
-                        }
-                      },);
-                      popUpButtons.insert(0, IconButton(onPressed:  (){controller.text = "";}, icon: Icon(Icons.delete, size: 30, color: Theme.of(context).primaryColor,))
+                      List<Widget> popUpButtons = _buildPopUpButtons(
+                        () {
+                          if (controller.text != _schedules) {
+                            _schedules = controller.text;
+                            _appendModificationString(
+                                "Schedule", controller.text);
+                          }
+                        },
                       );
-                      Tools.showAnimatedDialog(context: context, title: popupTitle, content:
-                      _buildPopUpTextField(controller:controller, hint: "", maxLines: 8, maxLength: 500),
-                        actions:popUpButtons,);
+                      popUpButtons.insert(
+                          0,
+                          IconButton(
+                              onPressed: () {
+                                controller.text = "";
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                size: 30,
+                                color: Theme.of(context).primaryColor,
+                              )));
+                      Tools.showAnimatedDialog(
+                        context: context,
+                        title: popupTitle,
+                        content: _buildPopUpTextField(
+                            controller: controller,
+                            hint: "",
+                            maxLines: 8,
+                            maxLength: 500,
+                            inputType: TextInputType.multiline),
+                        actions: popUpButtons,
+                      );
                     },
                   ),
                 ),
@@ -523,7 +544,8 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                 controller: controller,
                                 hint: _restaurant.desc,
                                 maxLength: 500,
-                                maxLines: 5),
+                                maxLines: 5,
+                                inputType: TextInputType.multiline),
                             actions: _buildPopUpButtons(() {
                               if (controller.text != "" &&
                                   controller.text != _restaurant.desc) {
@@ -654,22 +676,24 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
         ),
       );
 
-  Widget _buildPopUpTextField(
-          {required TextEditingController controller,
-          TextInputType inputType = TextInputType.text,
-          required String hint,
-          int maxLength = 100,
-          int maxLines = 1}) =>
+  Widget _buildPopUpTextField({
+    required TextEditingController controller,
+    TextInputType inputType = TextInputType.text,
+    required String hint,
+    int maxLength = 100,
+    int maxLines = 1,
+  }) =>
       TextField(
         controller: controller,
         maxLength: maxLength,
         keyboardType: inputType,
         maxLines: maxLines,
         decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.zero,
-            hintText: hint,
-            hintStyle: TextStyle(fontSize: 14)),
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 14),
+        ),
       );
 
   List<Widget> _buildPopUpButtons(VoidCallback updateFunction) => <Widget>[
