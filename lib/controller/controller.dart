@@ -13,6 +13,7 @@ class Controller {
     return _controller;
   }
 
+  /// Returns the list of [Restaurant] searched by the user.
   List<Restaurant> getRestaurants() {
     //TODO: Test method !
     var r1 = Restaurant(
@@ -127,6 +128,7 @@ class Controller {
     return [r1, r2, r3, r4, r5];
   }
 
+  /// Returns the [List] of [Restaurant] added to the user's favorites.
   List<Restaurant> getFavorites() {
     return getRestaurants();
   }

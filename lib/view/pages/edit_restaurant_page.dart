@@ -1,18 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:veguide/controller/leaves_controller.dart';
+import 'package:veguide/view/widgets/leaves_controller.dart';
 import 'package:veguide/modele/restaurant.dart';
-import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 import 'package:veguide/view/widgets/app_title.dart';
-import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/ask_email.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:veguide/view/widgets/restaurant_image.dart';
 import 'package:veguide/view/widgets/suggestion_field.dart';
 import 'package:veguide/view/widgets/tag_button.dart';
-import 'package:collection/collection.dart';
 import 'package:veguide/view/widgets/thanks_widget.dart';
 
 class EditRestaurantPage extends StatefulWidget {
@@ -25,31 +21,43 @@ class EditRestaurantPage extends StatefulWidget {
 }
 
 class _EditRestaurantPageState extends State<EditRestaurantPage> {
-  // static const SizedBox separator = const SizedBox(
-  //   height: 10.0,
-  // );
-
+  /// Cloned version of the restaurant passed in the [EditRestaurantPage] widget.
   late Restaurant _restaurant;
 
+  /// Map storing modifications asked by the user.
+  /// * Key stores the info that the user wishes to modify (i.e. 'name').
+  /// * Value stores the value of this info (i.e. 'the great vegan restaurant').
   Map<String, String> _modifications = {};
 
+  /// Gets a string of what's in [_modifications] map.
   get _modificationString {
-    String modifs = "";
+    String modifications = "";
     _modifications.forEach((key, value) {
-      modifs += "$key : $value\n";
+      modifications += "$key : $value\n";
     });
-    return modifs;
+    return modifications;
   }
 
+  /// [true] when the form has been submitted.
   bool _isSent = false;
 
-  // List<Schedule> schedules = [];
-
+  /// Controller of the [Leaves] object.
   late LeavesController _leavesController;
+
+  /// Value of the [AskEmail]'s checkbox. False by default.
   bool _checkBoxValue = false;
 
+  /// Schedule String, used in the schedule edition text field.
   String _schedules = "";
 
+  /// Comment [TextField] controller.
+  TextEditingController _commentController = TextEditingController();
+
+  /// Email [TextField] controller.
+  TextEditingController _emailController = TextEditingController();
+
+  /// Returns the edit icon of size [size] and color [color].
+  /// Defaults on a black, size 24 edit note icon.
   Widget _editIcon({double? size = 24, Color? color = Colors.black}) {
     return Icon(Icons.edit_note, color: color, size: ((size ?? 24) + 4));
   }
@@ -59,7 +67,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
     super.initState();
     _restaurant = widget.restaurant.clone();
     _leavesController =
-        LeavesController(clickable: true, leafLevel: _restaurant.leafLevel);
+        LeavesController(leafLevel: _restaurant.leafLevel);
     _schedules = _restaurant.scheduleDisplay;
   }
 
@@ -74,6 +82,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
     );
   }
 
+  /// Builds the form.
   Widget _buildForm() {
     final double padding = 8.0;
     final String popupTitle = "Modification";
@@ -109,10 +118,10 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                 title: popupTitle,
                 content: _buildPopUpTextField(
                     controller: controller,
-                    inputType: TextInputType.phone,
+                    textInputType: TextInputType.phone,
                     hint: _restaurant.phone,
                     maxLength: 10),
-                actions: _buildPopUpButtons(() {
+                actions: _buildPopUpButtons(updateFunction: () {
                   if (controller.text != "" &&
                       controller.text != _restaurant.phone) {
                     _restaurant.phone = controller.text;
@@ -135,7 +144,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
               content: _buildPopUpTextField(
                   controller: controller,
                   hint: _restaurant.website ?? "Aucun site web renseigné"),
-              actions: _buildPopUpButtons(() {
+              actions: _buildPopUpButtons(updateFunction: () {
                 if (controller.text != "" &&
                     controller.text != _restaurant.website) {
                   _restaurant.website = controller.text;
@@ -158,7 +167,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
               content: _buildPopUpTextField(
                   controller: controller,
                   hint: _restaurant.fb ?? "Aucune page Facebook renseignée"),
-              actions: _buildPopUpButtons(() {
+              actions: _buildPopUpButtons(updateFunction: () {
                 if (controller.text != "" &&
                     controller.text != _restaurant.fb) {
                   _restaurant.fb = controller.text;
@@ -211,7 +220,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                               controller: controller,
                                               hint: _restaurant.imageURI ??
                                                   "Renseignez l'URL d'une image."),
-                                          actions: _buildPopUpButtons(() {
+                                          actions: _buildPopUpButtons(updateFunction: () {
                                             if (controller.text != "" &&
                                                 controller.text !=
                                                     _restaurant.imageURI) {
@@ -270,8 +279,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                       maxLength: 50,
                                       controller: controller,
                                       hint: _restaurant.name),
-                                  actions: _buildPopUpButtons(
-                                    () {
+                                  actions: _buildPopUpButtons(updateFunction: () {
                                       if (controller.text != "" &&
                                           controller.text != _restaurant.name) {
                                         _restaurant.name = controller.text;
@@ -319,8 +327,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                       maxLength: 200,
                                       controller: controller,
                                       hint: _restaurant.address),
-                                  actions: _buildPopUpButtons(
-                                    () {
+                                  actions: _buildPopUpButtons(updateFunction: () {
                                       if (controller.text != "" &&
                                           controller.text !=
                                               _restaurant.address) {
@@ -388,7 +395,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                             child: _buildPopUpTextField(
                                                 controller: cityCodeController,
                                                 hint: _restaurant.cityCode,
-                                                inputType: TextInputType.number,
+                                                textInputType: TextInputType.number,
                                                 maxLength: 5),
                                           ),
                                         ],
@@ -416,8 +423,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                       // Text("tets"),
                                     ],
                                   ),
-                                  actions: _buildPopUpButtons(
-                                    () {
+                                  actions: _buildPopUpButtons(updateFunction: () {
                                       if (cityCodeController.text != "" &&
                                           cityCodeController.text !=
                                               _restaurant.cityCode) {
@@ -440,7 +446,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                             ),
                           ),
 
-                          Leaves(leavesController: _leavesController),
+                          Leaves(clickable: true, leavesController: _leavesController),
                         ],
                       ),
                     ),
@@ -472,8 +478,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                       TextEditingController controller =
                           TextEditingController();
                       controller.text = _schedules;
-                      List<Widget> popUpButtons = _buildPopUpButtons(
-                        () {
+                      List<Widget> popUpButtons = _buildPopUpButtons(updateFunction: () {
                           if (controller.text != _schedules) {
                             _schedules = controller.text;
                             _appendModificationString(
@@ -500,7 +505,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                             hint: "",
                             maxLines: 8,
                             maxLength: 500,
-                            inputType: TextInputType.multiline),
+                            textInputType: TextInputType.multiline),
                         actions: popUpButtons,
                       );
                     },
@@ -545,8 +550,8 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                                 hint: _restaurant.desc,
                                 maxLength: 500,
                                 maxLines: 5,
-                                inputType: TextInputType.multiline),
-                            actions: _buildPopUpButtons(() {
+                                textInputType: TextInputType.multiline),
+                            actions: _buildPopUpButtons(updateFunction: () {
                               if (controller.text != "" &&
                                   controller.text != _restaurant.desc) {
                                 _restaurant.desc = controller.text;
@@ -594,7 +599,10 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: ElevatedButton(
-              onPressed: () {
+              onPressed:
+                  /// Gets the info that changed during the user's edition and sends
+              /// them.
+                  () {
                 for (Tag tag in Tag.values) {
                   if (widget.restaurant.isTagToggled(tag) &&
                       !_restaurant.isTagToggled(tag)) {
@@ -643,9 +651,11 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
     );
   }
 
-  TextEditingController _commentController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
 
+  /// Creates a button for contact methods (i.e. phone, facebook...).
+  /// Event method [onPressed] is required.
+  /// The button can be filled by an [icon], and/or text [content].
+  /// (Should be one of both to avoid an empty button).
   Widget createContactButton({
     required VoidCallback onPressed,
     String? content,
@@ -676,9 +686,13 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
         ),
       );
 
+  /// Builds a [TextField] used in a pop up menu.
+  /// [textInputType] is the input type, typically text, number, or multiline.
+  /// [hint] is displayed in the [TextField]
+  /// [maxLength] and [maxLines] are optional, and default respectively at 100 chars and 1 line.
   Widget _buildPopUpTextField({
     required TextEditingController controller,
-    TextInputType inputType = TextInputType.text,
+    TextInputType textInputType = TextInputType.text,
     required String hint,
     int maxLength = 100,
     int maxLines = 1,
@@ -686,7 +700,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
       TextField(
         controller: controller,
         maxLength: maxLength,
-        keyboardType: inputType,
+        keyboardType: textInputType,
         maxLines: maxLines,
         decoration: InputDecoration(
           isDense: true,
@@ -696,7 +710,9 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
         ),
       );
 
-  List<Widget> _buildPopUpButtons(VoidCallback updateFunction) => <Widget>[
+  /// Builds an OK and a Cancel button, to be displayed in a pop up menu.
+  /// The OK button calls the [updateFunction] before closing.
+  List<Widget> _buildPopUpButtons({required VoidCallback updateFunction}) => <Widget>[
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -713,22 +729,13 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
         ),
       ];
 
+  /// Adds an item to the modification map.
+ /// * Key stores the info that the user wishes to modify (i.e. 'name').
+/// * Value stores the value of this info (i.e. 'the great vegan restaurant').
   void _appendModificationString(String key, String value) {
     _modifications[key] = value;
   }
 
-// Future<TimeOfDay?> _selectTime(BuildContext context, TimeOfDay? initialTime) async {
-//   final TimeOfDay? selectedTimeOfDay = await showTimePicker(
-//     context: context,
-//     initialTime: widget.restaurant.schedules[0].closesAtAM ?? TimeOfDay.now(),
-//     initialEntryMode: TimePickerEntryMode.dial,
-//   );
-//   if(selectedTimeOfDay != null)
-//   {
-//     return selectedTimeOfDay;
-//   }
-//   return initialTime;
-// }
 }
 
 enum Category {

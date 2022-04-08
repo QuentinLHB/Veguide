@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:veguide/controller/controller.dart';
-import 'package:veguide/controller/leaves_controller.dart';
+import 'package:veguide/view/widgets/leaves_controller.dart';
 import 'package:veguide/modele/restaurant.dart';
 import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 import 'package:veguide/view/pages/edit_restaurant_page.dart';
-import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/expandable_tag_button.dart';
 import 'package:veguide/view/widgets/fav_button.dart';
 import 'package:veguide/view/widgets/leaves.dart';
@@ -98,6 +96,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                         style: Theme.of(context).primaryTextTheme.bodyMedium,
                       ),
                       Leaves(
+                        clickable: false,
                         leavesController:
                             LeavesController(leafLevel: restau.leafLevel),
                       )

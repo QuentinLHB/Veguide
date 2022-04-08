@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// Class storing business hours for a day.
 class Schedule {
   int _idJour;
-  String _jour;
+  String _day;
   TimeOfDay? _opensAtAM;
   TimeOfDay? _closesAtAM;
   TimeOfDay? _opensAtPM;
   TimeOfDay? _closesAtPM;
 
-  Schedule._(this._idJour, this._jour, this._opensAtAM, this._closesAtAM,
+  Schedule._(this._idJour, this._day, this._opensAtAM, this._closesAtAM,
       this._opensAtPM, this._closesAtPM);
 
   factory Schedule(
@@ -22,27 +23,31 @@ class Schedule {
         idJour, jour, opensAtAM, closesAtAM, opensAtPM, closesAtPM);
   }
 
-  String get day => _jour;
+  /// Gets the day name.
+  String get day => _day;
 
+  /// Gets the morning opening hour.
   TimeOfDay? get opensAtAM => _opensAtAM;
 
-  // String get opensAtAMDisplay => _opensAtAM.toString() ?? "-";
-
+  /// Gets the morning closing hour.
   TimeOfDay? get closesAtPM => _closesAtPM;
 
-  // String get closesAtPMDisplay => closesAtPM.toString() ?? "-";
 
+  /// Gets the afternoon opening hour.
   TimeOfDay? get opensAtPM => _opensAtPM;
 
-  // String get opensAtPMDisplay => opensAtPM.toString() ?? "-";
-
+  /// Gets the afternoon closing hour.
   TimeOfDay? get closesAtAM => _closesAtAM;
 
+  /// Formats [this] in the following format:
+  /// '[day] : hh:mm - hh:mm / hh:mm - hh:mm'.
   @override
   String toString() {
-    return "$_jour : ${getHours()}";
+    return "$_day : ${getHours()}";
   }
 
+  /// Formats the hours in the following format:
+  /// hh:mm - hh:mm / hh:mm - hh:mm
   String getHours() {
     String? morning;
     String? afternoon;
@@ -69,11 +74,13 @@ class Schedule {
     return result + (afternoon ?? "");
   }
 
+  /// Reformats to add a leading 0 if needed.
   String _reformat(int value) {
     if (value < 10) return '0$value';
     return value.toString();
   }
 
+  /// Gets morning hours as a string in a hh:mm format.
   String get amHours{
     if (_opensAtAM != null && _closesAtAM != null) {
       return
@@ -82,7 +89,7 @@ class Schedule {
       return "-";
     }
   }
-
+  /// Gets afternoon hours as a string in a hh:mm format.
   String get pmHours{
     if (_opensAtPM != null && _closesAtPM != null) {
       return "${_reformat(_opensAtPM!.hour)}:${_reformat(_opensAtPM!.minute)} - ${_reformat(_closesAtPM!.hour)}:${_reformat(_opensAtPM!.minute)}";
@@ -93,7 +100,7 @@ class Schedule {
 
   /// Creates a deep copy of [this].
   Schedule clone(){
-    return Schedule(idJour: _idJour, jour: _jour, opensAtAM: _opensAtAM, closesAtAM: _closesAtAM, opensAtPM:_opensAtPM, closesAtPM: _closesAtPM);
+    return Schedule(idJour: _idJour, jour: _day, opensAtAM: _opensAtAM, closesAtAM: _closesAtAM, opensAtPM:_opensAtPM, closesAtPM: _closesAtPM);
   }
 
   set opensAtAM(TimeOfDay? value) {

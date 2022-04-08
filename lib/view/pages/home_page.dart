@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veguide/controller/controller.dart';
-import 'package:veguide/controller/leaves_controller.dart';
+import 'package:veguide/view/widgets/leaves_controller.dart';
 import 'package:veguide/modele/restaurant.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/view/widgets/leaves.dart';
@@ -17,12 +17,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const defaultLeavesValue = 1;
   final TextEditingController _cityTextFieldController =
       TextEditingController();
   late FocusNode cityTextFieldFocusNode;
   final Map<Tag, bool> _tagsToggles = {};
   final LeavesController _leafController =
-      LeavesController(leafLevel: 1, clickable: true);
+      LeavesController(leafLevel: defaultLeavesValue);
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    unfocusTextField();
+    _unfocusTextField();
   }
 
   @override
@@ -70,25 +71,26 @@ class _HomePageState extends State<HomePage> {
                           maxLines: 1,
                           onSubmitted: (text) {
                             // search();
-                            unfocusTextField();
+                            _unfocusTextField();
                           },
                           onEditingComplete: () {
-                            unfocusTextField();
+                            _unfocusTextField();
                           },
                         ),
                       ),
-                      Leaves(leavesController: _leafController),
+                      Leaves(
+                          clickable: true, leavesController: _leafController),
                     ],
                   ),
                 ),
                 Wrap(
                   alignment: WrapAlignment.spaceAround,
                   children: [
-                    createTagButton(Tag.cheap),
-                    createTagButton(Tag.rotativeMenu),
-                    createTagButton(Tag.takeAway),
-                    createTagButton(Tag.delivery),
-                    createTagButton(Tag.newPlace),
+                    _createTagButton(Tag.cheap),
+                    _createTagButton(Tag.rotativeMenu),
+                    _createTagButton(Tag.takeAway),
+                    _createTagButton(Tag.delivery),
+                    _createTagButton(Tag.newPlace),
                   ],
                 ),
                 Row(
@@ -96,53 +98,15 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: search,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 3.0),
-                          child: Icon(Icons.search_rounded),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(grey)),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: resetFilters,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 3.0),
-                          child: Icon(Icons.delete),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(grey),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)),
-                      ),
-                    ),
-                    //
-                    // IconButton(
-                    //     onPressed: searchButton_onPressed,
-                    //     icon: const Icon(Icons.search_rounded)),
-                    // IconButton(
-                    //     onPressed: searchButton_onPressed,
-                    //     icon: const Icon(Icons.delete)),
+                    _createSearchControlButton(Icons.search_rounded, _search),
+                    _createSearchControlButton(Icons.delete, _resetFilters),
                   ],
                 )
               ],
             ),
             collapsed: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: createSummary(),
+              child: _createSearchSummary(),
             ),
             // collapsed: const SizedBox(height: 20,),
           ),
@@ -154,20 +118,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void unfocusTextField() {
+  /// Unfocus the city text field.
+  void _unfocusTextField() {
     cityTextFieldFocusNode.unfocus();
   }
 
-  void search() {
-    unfocusTextField();
+  /// Searches the restaurant matching with the criteria.
+  void _search() {
+    _unfocusTextField();
+    // TODO : Search back end goes here.
     setState(() {});
   }
 
-  Widget createTagButton(Tag tag) => Padding(
+  /// Creates a [TagButton] matching with the [Tag] data passed as argument.
+  Widget _createTagButton(Tag tag) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: TagButton(
           onPressed: () {
-            unfocusTextField();
+            _unfocusTextField();
             var isToggled = _tagsToggles[tag];
             _tagsToggles[tag] = !isToggled!;
           },
@@ -177,9 +145,13 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
-  Widget createSummary() {
+  /// Creates a [Wrap] widget containing the city name and the logos
+  /// of what the user is searching for (leaves, tags...).
+  Widget _createSearchSummary() {
     const padding = 8.0;
     List<Widget> widgets = [];
+
+    // Adds a logo for each active tag button.
     _tagsToggles.forEach((tag, isToggled) {
       if (isToggled) {
         widgets.add(Padding(
@@ -193,12 +165,14 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    if (_leafController.leafLevel > 1) {
+    // Adds leaves if they're not the default value.
+    if (_leafController.leafLevel != defaultLeavesValue) {
       widgets.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: padding),
         child: Leaves(
-            leavesController: LeavesController(
-                leafLevel: _leafController.leafLevel, clickable: false)),
+            clickable: false,
+            leavesController:
+                LeavesController(leafLevel: _leafController.leafLevel)),
       ));
     }
 
@@ -208,7 +182,8 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: WrapCrossAlignment.center,
     );
 
-    if (_cityTextFieldController.text != "") {
+    // Adds the city on top if it has been completed.
+    if (_cityTextFieldController.text.isNotEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,18 +203,38 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void resetFilters() {
+  /// Restores the search widgets to their initial values.
+  void _resetFilters() {
     setState(() {
       _cityTextFieldController.text = "";
       _resetTagButtons();
-      _leafController.leafLevel = 1;
+      _leafController.leafLevel = defaultLeavesValue;
     });
-    search();
+    _search();
   }
 
+  /// Restores every [TagButton]s to its initial value.
   void _resetTagButtons() {
     for (Tag tag in Tag.values) {
       _tagsToggles[tag] = false;
     }
   }
+
+  /// Creates a button used for controlling search (i.e. 'search', 'reset' buttons).
+  Widget _createSearchControlButton(IconData icon, void Function()? onPressed) =>
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+          child: Icon(icon),
+        ),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Theme.of(context).primaryColor),
+            foregroundColor: MaterialStateProperty.all<Color>(grey)),
+      ),
+    );
+
 }

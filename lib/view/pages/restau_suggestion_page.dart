@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:veguide/controller/leaves_controller.dart';
+import 'package:veguide/view/widgets/leaves_controller.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
-import 'package:veguide/view/styles.dart';
 import 'package:veguide/view/widgets/app_title.dart';
 import 'package:veguide/view/widgets/ask_email.dart';
 import 'package:veguide/view/widgets/leaves.dart';
@@ -23,7 +21,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
   Map<Field, TextEditingController> _fieldControllers = {};
 
   LeavesController _leavesController =
-      LeavesController(leafLevel: 1, clickable: true);
+      LeavesController(leafLevel: 1);
   final Map<Tag, bool> _tagsToggles = {};
   bool _isSent = false;
   bool _checkBoxValue = false;
@@ -136,6 +134,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
                 style: Theme.of(context).primaryTextTheme.bodyMedium,
               ),
               Leaves(
+                clickable: true,
                 leavesController: _leavesController,
                 isLarge: true,
               ),

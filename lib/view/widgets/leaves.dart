@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:veguide/controller/leaves_controller.dart';
+import 'package:veguide/view/widgets/leaves_controller.dart';
 import 'package:flutter/animation.dart';
 import 'package:veguide/tools.dart';
 import 'package:veguide/view/styles.dart';
 
 class Leaves extends StatefulWidget {
-  Leaves({Key? key, required this.leavesController, this.isLarge = false})
+  Leaves({Key? key, required this.leavesController, required this.clickable, this.isLarge = false})
       : super(key: key);
 
   LeavesController leavesController;
   bool isLarge;
+  bool clickable;
 
   @override
   _LeavesState createState() => _LeavesState();
@@ -26,7 +27,7 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    if (widget.leavesController.clickable) {
+    if (widget.clickable) {
       _animControllers[1] = _createAnimationController();
       _animControllers[2] = _createAnimationController();
       _animControllers[3] = _createAnimationController();
@@ -38,12 +39,12 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
     List<Widget> leaves = [];
     for (var i = 1; i <= 3; i++) {
       leaves.add(
-          widget.leavesController.clickable
+          widget.clickable
               ? _createAnimatedLeaf(i)
               : _createStaticLeaf(i)
       );
     }
-    if (widget.leavesController.clickable) {
+    if (widget.clickable) {
       leaves.add(SizedBox(width: 7,));
       leaves.add(Container(
         // color: Colors.blueAccent,
@@ -144,8 +145,9 @@ class _LeavesState extends State<Leaves> with TickerProviderStateMixin {
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: Leaves(
+                clickable: false,
                 leavesController:
-                LeavesController(leafLevel: leafLevel, clickable: false)),
+                LeavesController(leafLevel: leafLevel)),
           ),
           Text(description),
         ],

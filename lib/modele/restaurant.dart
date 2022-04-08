@@ -7,6 +7,11 @@ import 'package:collection/collection.dart';
 
 /// Stores a restaurant's data.
 class Restaurant {
+  /// When [true], the object can't be modified.
+  /// The value being retrieved from a data based, it is not meant to be modified.
+  /// The only way for this value to be set to true is to use the [clone] method,
+  /// creating an editable clone.
+  bool _locked = true;
 
   int _id;
 
@@ -32,8 +37,11 @@ class Restaurant {
 
   /// Full facebook's url (https://www.facebook.com/(...))
   String? get fb {
-    if(_fb != null) return "https://www.facebook.com/${_fb}";
-  else return null;}
+    if (_fb != null)
+      return "https://www.facebook.com/${_fb}";
+    else
+      return null;
+  }
 
   /// Last part of the facebook's url, after facebook.com/.
   String? get fbSuffix => _fb;
@@ -70,7 +78,7 @@ class Restaurant {
   /// * 3 : 100% vegan
   int get leafLevel => _leafLevel;
 
-  List<Tag> _tags;
+  final List<Tag> _tags;
 
   /// Tags
   List<Tag> get tags => _tags;
@@ -79,10 +87,12 @@ class Restaurant {
 
   /// True if [this] has been added to the user's favorites.
   bool get isFav => _isFav;
+
   set isFav(bool isFav) => _isFav = isFav;
 
   /// Schedule for every day (one object per day).
   List<Schedule> _schedules;
+
   List<Schedule> get schedules => _schedules;
 
   /// Creates a restaurant.
@@ -104,94 +114,153 @@ class Restaurant {
     required List<int> tagIds,
     required List<Schedule> schedules,
     bool? isFav,
-  }){
+  }) {
     List<Tag> tags = [];
-    for(int tagId in tagIds){
+    for (int tagId in tagIds) {
       tags.add(Tools.findTag(tagId));
     }
-    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode, city, imageURI, leafLevel, tags, schedules, isFav);
+    return Restaurant._(id, name, desc, website, fb, phone, address, cityCode,
+        city, imageURI, leafLevel, tags, schedules, isFav);
   }
 
-  Restaurant._(this._id, this._name, this._desc, this._website, this._fb,
-      this._phone, this._address, this._cityCode, this._city, this._imageURI, this._leafLevel, this._tags, this._schedules, bool? isFav){
-    if(isFav != null) _isFav = isFav;
+  Restaurant._(
+      this._id,
+      this._name,
+      this._desc,
+      this._website,
+      this._fb,
+      this._phone,
+      this._address,
+      this._cityCode,
+      this._city,
+      this._imageURI,
+      this._leafLevel,
+      this._tags,
+      this._schedules,
+      bool? isFav,
+      {bool locked = true}) {
+    if (isFav != null) _isFav = isFav;
+    _locked = locked;
   }
 
-  /// Creates a clone instance of [this].
-  Restaurant clone(){
+  /// Creates an editable clone instance of [this].
+  Restaurant clone() {
     List<Schedule> schedules = [];
     _schedules.forEach((element) {
       schedules.add(element.clone());
     });
-    return Restaurant._(_id, _name, _desc, _website, _fb, _phone, _address, _cityCode, _city, _imageURI, _leafLevel, List.from(_tags), schedules, isFav);
+    return Restaurant._(
+        _id,
+        _name,
+        _desc,
+        _website,
+        _fb,
+        _phone,
+        _address,
+        _cityCode,
+        _city,
+        _imageURI,
+        _leafLevel,
+        List.from(_tags),
+        schedules,
+        isFav,
+        locked: false);
   }
 
   /// Returns true when the [tag] exists in the [_restaurant]'s [Tag] list.
-  bool isTagToggled(Tag tag){
+  bool isTagToggled(Tag tag) {
     return _tags.firstWhereOrNull((Tag restauTag) {
-      return restauTag == tag;
-    }) != null;
+          return restauTag == tag;
+        }) !=
+        null;
   }
 
-  void removeTag(Tag tag){
-    _tags.remove(tag);
+  /// Removes a [Tag] (if using a clone)
+  /// see [clone].
+  void removeTag(Tag tag) {
+    if(!_locked) _tags.remove(tag);
   }
 
-  void addTag(Tag tag){
-    _tags.add(tag);
+  /// Adds a [Tag] (if using a clone)
+  /// see [clone].
+  void addTag(Tag tag) {
+    if(!_locked) _tags.add(tag);
   }
 
+  /// Sets the name (if using a clone)
+  ///  see [clone].
   set name(String value) {
-    _name = value;
+    if (!_locked) _name = value;
   }
 
+  /// Sets the schedules (if using a clone)
+   ///  see [clone].
   set schedules(List<Schedule> value) {
-    _schedules = value;
+    if (!_locked) _schedules = value;
   }
 
-  set tags(List<Tag> value) {
-    _tags = value;
-  }
-
+  /// Sets the leaf level (if using a clone)
+  ///  see [clone].
   set leafLevel(int value) {
-    _leafLevel = value;
+    if(!_locked)_leafLevel = value;
   }
 
+  /// Sets the image URI (if using a clone)
+   ///  see [clone].
   set imageURI(String? value) {
-    _imageURI = value;
+    if(!_locked)_imageURI = value;
   }
 
+  /// Sets the city (if using a clone)
+  ///  see [clone].
   set city(String value) {
-    _city = value;
+    if(!_locked)_city = value;
   }
 
+  /// Sets the city code (if using a clone)
+  ///  see [clone].
   set cityCode(String value) {
-    _cityCode = value;
+    if(!_locked)_cityCode = value;
   }
 
+  /// Sets the address (if using a clone)
+  ///  see [clone].
   set address(String value) {
-    _address = value;
+    if(!_locked)_address = value;
   }
 
+  /// Sets the phone number (if using a clone)
+  ///  see [clone].
   set phone(String value) {
-    _phone = value;
+    if(!_locked) _phone = value;
   }
 
+  /// Sets the facebook id (i.e. 'restaurant', not the whole url) (if using a clone)
+  ///  see [clone].
   set fb(String? value) {
-    _fb = value;
+    if(!_locked)_fb = value;
   }
 
+  /// Sets the website URL (if using a clone)
+   ///  see [clone].
   set website(String? value) {
-    _website = value;
+    if(!_locked)_website = value;
   }
 
+  /// Sets the restaurant description (if using a clone)
+  ///  see [clone].
   set desc(String value) {
-    _desc = value;
+    if(!_locked)_desc = value;
   }
 
-  String get scheduleDisplay{
+  /// Gets a formated [String] displaying every [Schedule].
+  /// For example :
+  /// "Lundi : 12:00 - 14:00 / 18:00 - 21:30
+  /// Mardi : 12:00 - 14:00
+  /// (...)"
+  String get scheduleDisplay {
     String display = "";
-    for(Schedule schedule in _schedules){
+    for (Schedule schedule in _schedules) {
       display += schedule.toString() + "\n";
     }
     return display;

@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:veguide/view/widgets/app_title.dart';
-import 'package:veguide/view/widgets/fav_button.dart';
-import 'package:veguide/view/styles.dart';
 
+/// About page, showing info about the app.
 class AboutPage extends StatelessWidget {
   AboutPage({Key? key}) : super(key: key);
 
@@ -58,6 +56,7 @@ class AboutPage extends StatelessWidget {
     );
   }
 
+  /// Formats a [TextSpan] depending on whether the text has to be [highlight]ed or not.
   TextSpan buildTextSpan(
           {required BuildContext context,
           required bool highlight,

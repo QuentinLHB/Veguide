@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:veguide/view/widgets/expandable_tag_button.dart';
 
+/// Represents tags that can define a restaurant.
 enum Tag{
   cheap,
   rotativeMenu,
@@ -10,6 +12,7 @@ enum Tag{
 }
 
 extension TagsText on Tag{
+  /// Gets a [Tag]'s name.
   String get name{
     switch(this){
       case Tag.cheap: return "Abordable";
@@ -22,7 +25,7 @@ extension TagsText on Tag{
 
     }
   }
-
+  /// Gets an [IconData] that represents the tag.
   IconData get icon{
     switch(this){
       case Tag.cheap: return Icons.euro_rounded;
@@ -34,6 +37,8 @@ extension TagsText on Tag{
     }
   }
 
+  /// Represent's the text's length
+  /// (shitty code used to animate tag buttons, see [ExpandableTagButton] fore more info).
   double get width{
     switch(this){
       case Tag.cheap: return 11;
