@@ -184,8 +184,10 @@ class Restaurant {
   /// Adds a [Tag] (if using a clone)
   /// see [clone].
   void addTag(Tag tag) {
-    if(!_locked) _tags.add(tag);
+    // if(!_locked) _tags.add(tag);
+    _tags.add(tag);
   }
+
 
   /// Sets the name (if using a clone)
   ///  see [clone].

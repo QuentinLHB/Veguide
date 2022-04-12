@@ -23,20 +23,24 @@ class RestaurantsExpandableList extends StatefulWidget {
 
 class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
   List<bool> _panelOpenList = [];
+  Map<Restaurant, bool> _panelOpenMap = {};
 
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < widget.restaurants.length; i++) {
-      _panelOpenList.add(false);
+    for(Restaurant restaurant in widget.restaurants){
+      _panelOpenMap[restaurant] = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    for(Restaurant restaurant in widget.restaurants){
+      _panelOpenMap[restaurant] = _panelOpenMap[restaurant] ?? false;
+    }
     List<ExpansionPanel> panels = [];
-    for (var i = 0; i < widget.restaurants.length; i++) {
-      panels.add(_createRestaurantPanelHeader(i, _panelOpenList[i]));
+    for (var restau in _panelOpenMap.entries) {
+      panels.add(_createRestaurantPanelHeader(restau.key, restau.value));
     }
 
     return Expanded(
@@ -55,8 +59,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     );
   }
 
-  ExpansionPanel _createRestaurantPanelHeader(int index, bool open) {
-    Restaurant restau = widget.restaurants[index];
+  ExpansionPanel _createRestaurantPanelHeader(Restaurant restau, bool open) {
     return ExpansionPanel(
       headerBuilder: (context, isOpen) {
         return SizedBox(
@@ -108,8 +111,8 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
           ),
         );
       },
-      body: createExpandedBody(widget.restaurants[index]),
-      isExpanded: _panelOpenList[index],
+      body: createExpandedBody(restau),
+      isExpanded: _panelOpenMap[restau] ?? false,
       canTapOnHeader: true,
     );
   }

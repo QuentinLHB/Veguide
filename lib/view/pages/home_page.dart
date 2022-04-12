@@ -25,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   final LeavesController _leafController =
       LeavesController(leafLevel: defaultLeavesValue);
 
+  List<Restaurant> _restaurants = [];
+
   @override
   void initState() {
     super.initState();
@@ -113,7 +115,7 @@ class _HomePageState extends State<HomePage> {
         ),
 
         /// Center page
-        RestaurantsExpandableList(restaurants: Controller().getRestaurants()),
+        RestaurantsExpandableList(restaurants: _restaurants),
       ]),
     );
   }
@@ -124,10 +126,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Searches the restaurant matching with the criteria.
-  void _search() {
+  void _search() async{
+    var restaus = await Controller().getRestaurants(city: _cityTextFieldController.text);
     _unfocusTextField();
     // TODO : Search back end goes here.
-    setState(() {});
+    setState(() {
+      _restaurants = restaus;
+    });
   }
 
   /// Creates a [TagButton] matching with the [Tag] data passed as argument.
