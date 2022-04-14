@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isSearching = false;
   static const defaultLeavesValue = 1;
   final TextEditingController _cityTextFieldController =
       TextEditingController();
@@ -115,7 +116,7 @@ class _HomePageState extends State<HomePage> {
         ),
 
         /// Center page
-        RestaurantsExpandableList(restaurants: _restaurants),
+        _isSearching ? Center(child: CircularProgressIndicator()) : RestaurantsExpandableList(restaurants: _restaurants),
       ]),
     );
   }
@@ -127,10 +128,21 @@ class _HomePageState extends State<HomePage> {
 
   /// Searches the restaurant matching with the criteria.
   void _search() async{
-    var restaus = await Controller().getRestaurants(city: _cityTextFieldController.text);
+    setState(() {
+      _isSearching = true;
+    });
+    List<Tag> tags= [];
+    for(var tagToggle in _tagsToggles.entries){
+      if(tagToggle.value) tags.add(tagToggle.key);
+    }
+    var restaus = await Controller().getRestaurants(city: _cityTextFieldController.text,
+    leafLevel: _leafController.leafLevel,
+      tags: tags
+    );
     _unfocusTextField();
     // TODO : Search back end goes here.
     setState(() {
+      _isSearching = false;
       _restaurants = restaus;
     });
   }

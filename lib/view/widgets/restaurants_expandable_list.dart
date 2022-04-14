@@ -23,24 +23,22 @@ class RestaurantsExpandableList extends StatefulWidget {
 
 class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
   List<bool> _panelOpenList = [];
-  Map<Restaurant, bool> _panelOpenMap = {};
+  List<RestaurantListAdapter> list = [];
 
   @override
   void initState() {
     super.initState();
-    for(Restaurant restaurant in widget.restaurants){
-      _panelOpenMap[restaurant] = false;
+    print("initState");
+    for (var i = 0; i < widget.restaurants.length; i++) {
+      _panelOpenList.add(false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    for(Restaurant restaurant in widget.restaurants){
-      _panelOpenMap[restaurant] = _panelOpenMap[restaurant] ?? false;
-    }
     List<ExpansionPanel> panels = [];
-    for (var restau in _panelOpenMap.entries) {
-      panels.add(_createRestaurantPanelHeader(restau.key, restau.value));
+    for (var i = 0; i < widget.restaurants.length; i++) {
+      panels.add(_createRestaurantPanelHeader(i, _panelOpenList[i]));
     }
 
     return Expanded(
@@ -59,7 +57,8 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     );
   }
 
-  ExpansionPanel _createRestaurantPanelHeader(Restaurant restau, bool open) {
+  ExpansionPanel _createRestaurantPanelHeader(int index, bool open) {
+    Restaurant restau = widget.restaurants[index];
     return ExpansionPanel(
       headerBuilder: (context, isOpen) {
         return SizedBox(
@@ -101,7 +100,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                       Leaves(
                         clickable: false,
                         leavesController:
-                            LeavesController(leafLevel: restau.leafLevel),
+                        LeavesController(leafLevel: restau.leafLevel),
                       )
                     ],
                   ),
@@ -111,8 +110,8 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
           ),
         );
       },
-      body: createExpandedBody(restau),
-      isExpanded: _panelOpenMap[restau] ?? false,
+      body: createExpandedBody(widget.restaurants[index]),
+      isExpanded: _panelOpenList[index],
       canTapOnHeader: true,
     );
   }
@@ -320,4 +319,12 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
 //     curve: Curves.fastOutSlowIn,
 //   );
 // }
+}
+
+class RestaurantListAdapter{
+  int index;
+  Restaurant restaurant;
+  bool isOpen = false;
+
+  RestaurantListAdapter(this.index, this.restaurant);
 }

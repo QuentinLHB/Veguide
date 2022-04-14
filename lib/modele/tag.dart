@@ -47,4 +47,15 @@ extension TagsText on Tag{
       default: return 10;
     }
   }
+
+  int get id{
+    switch(this){
+      case Tag.cheap: return 1 ;
+      case Tag.rotativeMenu: return 2 ;
+      case Tag.newPlace: return 3;
+      case Tag.takeAway: return 4;
+      case Tag.delivery: return 5;
+      default: return 0;
+    }
+  }
 }

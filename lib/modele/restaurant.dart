@@ -111,14 +111,10 @@ class Restaurant {
     required String city,
     String? imageURI,
     required int leafLevel,
-    required List<int> tagIds,
+    required List<Tag> tags,
     required List<Schedule> schedules,
     bool? isFav,
   }) {
-    List<Tag> tags = [];
-    for (int tagId in tagIds) {
-      tags.add(Tools.findTag(tagId));
-    }
     return Restaurant._(id, name, desc, website, fb, phone, address, cityCode,
         city, imageURI, leafLevel, tags, schedules, isFav);
   }
