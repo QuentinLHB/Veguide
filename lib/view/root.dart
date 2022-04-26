@@ -18,13 +18,17 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   int _selectedIndex = 0;
 
+  // add
+  final pageController = PageController();
+  void onPageChanged(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    // Text(
-    //   'Fav tab',
-    // ),
     FavoritesPage(),
-    // PlusPage(),
   ];
 
   @override
@@ -46,8 +50,10 @@ class _RootState extends State<Root> {
   ])
         ],
       ),
-      body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
+      body: PageView(
+        children: _widgetOptions,
+        controller: pageController,
+        onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -61,15 +67,14 @@ class _RootState extends State<Root> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green[800],
+        unselectedItemColor: Colors.black.withOpacity(0.4),
         onTap: _onItemTapped,
       ),
     );
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    pageController.jumpToPage(index);
   }
 
   void onSelected(BuildContext context, int item) {
@@ -84,5 +89,12 @@ class _RootState extends State<Root> {
         break;
       default:break;
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
   }
 }

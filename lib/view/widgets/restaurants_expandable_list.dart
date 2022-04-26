@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veguide/controller/controller.dart';
 import 'package:veguide/view/widgets/leaves_controller.dart';
 import 'package:veguide/modele/restaurant.dart';
 import 'package:veguide/modele/schedule.dart';
@@ -22,6 +23,7 @@ class RestaurantsExpandableList extends StatefulWidget {
 }
 
 class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
+  Controller _controller = Controller();
   List<bool> _panelOpenList = [];
   List<RestaurantListAdapter> list = [];
 
@@ -42,18 +44,17 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
     }
 
     return Expanded(
-      child: ListView(
-          children: [
-            ExpansionPanelList(
-              elevation: 2,
-              children: panels,
-              expansionCallback: (index, isOpen) {
-                setState(() {
-                  _panelOpenList[index] = !isOpen;
-                });
-              },
-            ),
-          ]),
+      child: ListView(children: [
+        ExpansionPanelList(
+          elevation: 2,
+          children: panels,
+          expansionCallback: (index, isOpen) {
+            setState(() {
+              _panelOpenList[index] = !isOpen;
+            });
+          },
+        ),
+      ]),
     );
   }
 
@@ -72,7 +73,9 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                   padding: const EdgeInsets.all(10.0),
 
                   /// Shadow box beneath the image.
-                  child: RestaurantImage(imageURI: restau.imageURI,),
+                  child: RestaurantImage(
+                    imageURI: restau.imageURI,
+                  ),
                 ),
               ),
 
@@ -100,7 +103,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                       Leaves(
                         clickable: false,
                         leavesController:
-                        LeavesController(leafLevel: restau.leafLevel),
+                            LeavesController(leafLevel: restau.leafLevel),
                       )
                     ],
                   ),
@@ -206,14 +209,23 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                   ],
                 ),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>EditRestaurantPage(restaurant: restaurant,)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditRestaurantPage(
+                                restaurant: restaurant,
+                              )));
                 },
               ),
               Spacer(),
               FavButton(
                 isFav: restaurant.isFav,
                 onPressed: () {
-                  restaurant.isFav = !restaurant.isFav;
+                  if (restaurant.isFav) {
+                    _controller.removeFromFavorites(restaurant);
+                  } else {
+                    _controller.addToFavorites(restaurant);
+                  }
                 },
               ),
             ],
@@ -239,7 +251,11 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 icon == null ? const SizedBox.shrink() : Icon(icon),
-                (icon == null || content == null) ? SizedBox.shrink() : SizedBox(width: 4,),
+                (icon == null || content == null)
+                    ? SizedBox.shrink()
+                    : SizedBox(
+                        width: 4,
+                      ),
                 content == null ? const SizedBox.shrink() : Text(content),
               ],
             ),
@@ -285,7 +301,9 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
                 TextSpan(
                     text: schedule.day + " : ",
                     style: Theme.of(context).primaryTextTheme.bodyLarge),
-                TextSpan(text: schedule.getHours(), style: Theme.of(context).primaryTextTheme.bodyMedium),
+                TextSpan(
+                    text: schedule.getHours(),
+                    style: Theme.of(context).primaryTextTheme.bodyMedium),
               ],
             ),
           ),
@@ -321,7 +339,7 @@ class _RestaurantsExpandableListState extends State<RestaurantsExpandableList> {
 // }
 }
 
-class RestaurantListAdapter{
+class RestaurantListAdapter {
   int index;
   Restaurant restaurant;
   bool isOpen = false;

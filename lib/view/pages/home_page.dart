@@ -16,7 +16,10 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
+
+  Controller _controller = Controller();
   bool _isSearching = false;
   static const defaultLeavesValue = 1;
   final TextEditingController _cityTextFieldController =
@@ -33,6 +36,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     cityTextFieldFocusNode = FocusNode();
     _resetTagButtons();
+    defaultSearch();
   }
 
   @override
@@ -43,6 +47,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    print("build home");
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(children: [
@@ -126,6 +132,16 @@ class _HomePageState extends State<HomePage> {
     cityTextFieldFocusNode.unfocus();
   }
 
+  void defaultSearch() async{
+    _isSearching = true;
+    _controller.searchRestaurants().then((restaus) {
+      setState(() {
+        _isSearching = false;
+        _restaurants = restaus;
+      });
+    });
+  }
+
   /// Searches the restaurant matching with the criteria.
   void _search() async{
     setState(() {
@@ -135,7 +151,7 @@ class _HomePageState extends State<HomePage> {
     for(var tagToggle in _tagsToggles.entries){
       if(tagToggle.value) tags.add(tagToggle.key);
     }
-    var restaus = await Controller().getRestaurants(city: _cityTextFieldController.text,
+    var restaus = await _controller.searchRestaurants(city: _cityTextFieldController.text,
     leafLevel: _leafController.leafLevel,
       tags: tags
     );
@@ -253,5 +269,9 @@ class _HomePageState extends State<HomePage> {
             foregroundColor: MaterialStateProperty.all<Color>(grey)),
       ),
     );
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

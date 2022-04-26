@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+// import 'package:json_serializable/json_serializable.dart';
+// import 'package:json_annotation/json_annotation.dart';
+
+// part 'schedule.g.dart';
 
 /// Class storing business hours for a day.
+// @JsonSerializable()
 class Schedule {
   int _idJour;
   String _day;
@@ -118,4 +123,11 @@ class Schedule {
   set closesAtAM(TimeOfDay? value) {
     _closesAtAM = value;
   }
+
+  // /// Connect the generated [_$PersonFromJson] function to the `fromJson`
+  // /// factory.
+  // factory Schedule.fromJson(Map<String, dynamic> json) => _$ScheduleFromJson(json);
+  //
+  // /// Connect the generated [_$PersonToJson] function to the `toJson` method.
+  // Map<String, dynamic> toJson() => _$ScheduleToJson(this);
 }

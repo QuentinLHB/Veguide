@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veguide/controller/controller.dart';
+import 'package:veguide/modele/restaurant.dart';
 import 'package:veguide/view/widgets/restaurants_expandable_list.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -10,13 +11,39 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
+
+  bool _isLoading = false;
+
+  List<Restaurant> _favoriteRestaurants = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoading = true;
+    Controller().getFavorites().then((favs) {
+      setState(() {
+        setState(() {
+          _favoriteRestaurants = favs;
+          _isLoading = false;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RestaurantsExpandableList(restaurants: Controller().getFavorites()),
+        _isLoading
+            ?
+            Center(child: CircularProgressIndicator(),)
+        :
+        RestaurantsExpandableList(restaurants: _favoriteRestaurants),
       ],
     );
-    // return Text("");
   }
+
+  // @override
+  // // TODO: implement wantKeepAlive
+  // bool get wantKeepAlive => true;
 }

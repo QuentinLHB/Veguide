@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:json_serializable/json_serializable.dart';
 import 'package:veguide/modele/schedule.dart';
 import 'package:veguide/modele/tag.dart';
 import 'package:veguide/tools.dart';
 import 'package:collection/collection.dart';
+// import 'package:json_annotation/json_annotation.dart';
+
+// part 'restaurant.g.dart';
 
 /// Stores a restaurant's data.
+// @JsonSerializable()
 class Restaurant {
   /// When [true], the object can't be modified.
   /// The value being retrieved from a data based, it is not meant to be modified.
@@ -263,4 +268,20 @@ class Restaurant {
     }
     return display;
   }
+
+  // Restaurant.fromJson(Map<String, dynamic> json)
+  //     : _id = json['id'],
+  //       email = json['email'];
+  //
+  // Map<String, dynamic> toJson() => {
+  //   'name': name,
+  //   'email': email,
+  // };
+
+  // /// Connect the generated [_$PersonFromJson] function to the `fromJson`
+  // /// factory.
+  // factory Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
+  //
+  // /// Connect the generated [_$PersonToJson] function to the `toJson` method.
+  // Map<String, dynamic> toJson() => _$RestaurantToJson(this);
 }
