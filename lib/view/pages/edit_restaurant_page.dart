@@ -45,7 +45,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
   late LeavesController _leavesController;
 
   /// Value of the [AskEmail]'s checkbox. False by default.
-  bool _checkBoxValue = false;
+  bool _wantsEmail = false;
 
   /// Schedule String, used in the schedule edition text field.
   String _schedules = "";
@@ -588,7 +588,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
           child: AskEmail(
             onTap: () {
               setState(() {
-                _checkBoxValue = !_checkBoxValue;
+                _wantsEmail = !_wantsEmail;
               });
             },
             emailFieldController: _emailController,
@@ -624,31 +624,40 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
                 }
 
                 if (_modifications.isNotEmpty) {
+                  if(_wantsEmail && _emailController.text.isEmpty){
+                    showErrorDialog("Envoi impossible", "Veuillez renseigner votre adresse mail.");
+                    return;
+                  }
+
                   print(_modificationString);
                   // TODO back end goes here.
                   setState(() {
                     _isSent = true;
                   });
                 } else {
-                  Tools.showAnimatedDialog(
-                      context: context,
-                      title: "Envoi impossible",
-                      content: Text("Aucun changement n'a été enregistré."),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {});
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ]);
+                  showErrorDialog("Envoi impossible", "Aucun changement n'a été enregistré.");
                 }
               },
               child: Text("Envoyer")),
         ),
       ],
     );
+  }
+
+  void showErrorDialog(String title, String text){
+    Tools.showAnimatedDialog(
+        context: context,
+        title: title,
+        content: Text(text),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {});
+            },
+            child: const Text('OK'),
+          ),
+        ]);
   }
 
 

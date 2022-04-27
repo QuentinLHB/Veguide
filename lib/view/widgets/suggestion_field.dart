@@ -8,6 +8,7 @@ class SuggestionField extends StatefulWidget {
       this.mandatory = false,
       this.isNumber = false,
       this.charLimit = 100,
+        this.lines = 3,
       this.isMultiLine = false,
       this.screenRatio = 1,
       required this.text,
@@ -15,8 +16,10 @@ class SuggestionField extends StatefulWidget {
       required this.controller})
       : super(key: key);
 
+
   bool mandatory;
   int charLimit;
+  int lines;
   String text;
   String hint;
   TextEditingController controller;
@@ -29,6 +32,11 @@ class SuggestionField extends StatefulWidget {
 }
 
 class _SuggestionFieldState extends State<SuggestionField> {
+  int get maxLines{
+    if(!widget.isMultiLine) return 1;
+    return widget.lines;
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget textWidget = widget.mandatory
@@ -36,7 +44,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
             text: TextSpan(
               children: [
                 TextSpan(
-                    text: widget.text + " :",
+                    text: widget.text.isEmpty ? "" : widget.text + " :",
                     style: Theme.of(context).primaryTextTheme.bodyMedium),
                 TextSpan(
                     text: " *",
@@ -45,7 +53,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
               ],
             ),
           )
-        : Text(widget.text + " :",
+        : Text(widget.text.isEmpty ? "" : widget.text + " :",
             style: Theme.of(context).primaryTextTheme.bodyMedium);
 
     if(widget.isMultiLine){
@@ -87,7 +95,7 @@ class _SuggestionFieldState extends State<SuggestionField> {
       controller: widget.controller,
       maxLength: widget.charLimit,
       keyboardType: inputType,
-      maxLines: widget.isMultiLine ? 3 : 1,
+      maxLines: maxLines,
       decoration: InputDecoration(
           isDense: true,
           contentPadding: EdgeInsets.zero,

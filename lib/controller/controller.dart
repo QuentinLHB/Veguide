@@ -168,7 +168,7 @@ ORDER BY `distance` ASC, UPVOTES DESC''';
         } catch (e) {}
       }
     }
-    return [];
+    return tagList;
   }
 
   /// Returns the [List] of [Restaurant] added to the user's favorites.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veguide/view/pages/ContactPage.dart';
 import 'package:veguide/view/pages/favorites_page.dart';
 import 'package:veguide/view/pages/home_page.dart';
 import 'package:veguide/view/pages/about_page.dart';
@@ -86,6 +87,7 @@ class _RootState extends State<Root> {
         Navigator.push(context, MaterialPageRoute(builder: (context)=>RestaurantSuggestionPage()));
         break;
       case 2: // Feedback
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactPage()));
         break;
       default:break;
     }

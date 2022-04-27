@@ -53,8 +53,6 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: ListView(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 22.0),

@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage>
       _resetTagButtons();
       _leafController.leafLevel = defaultLeavesValue;
     });
-    _search();
+    // _search();
   }
 
   /// Restores every [OnOffButton]s to its initial value.
