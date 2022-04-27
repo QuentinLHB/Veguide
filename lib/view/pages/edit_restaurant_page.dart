@@ -8,7 +8,7 @@ import 'package:veguide/view/widgets/ask_email.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:veguide/view/widgets/restaurant_image.dart';
 import 'package:veguide/view/widgets/suggestion_field.dart';
-import 'package:veguide/view/widgets/tag_button.dart';
+import 'package:veguide/view/widgets/on_off_button.dart';
 import 'package:veguide/view/widgets/thanks_widget.dart';
 
 class EditRestaurantPage extends StatefulWidget {
@@ -90,7 +90,7 @@ class _EditRestaurantPageState extends State<EditRestaurantPage> {
     Tag.values.forEach((tag) {
       tagButtons.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: TagButton(
+        child: OnOffButton(
           icon: tag.icon,
           text: tag.name,
           onPressed: () {

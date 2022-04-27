@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:veguide/view/styles.dart';
 
-class TagButton extends StatefulWidget {
-  TagButton({Key? key, required this.onPressed, this.icon, this.text, required this.isToggled})
+class OnOffButton extends StatefulWidget {
+  OnOffButton({Key? key, required this.onPressed, this.icon, this.text, required this.isToggled})
       : super(key: key);
   VoidCallback onPressed;
   IconData? icon;
@@ -10,10 +10,10 @@ class TagButton extends StatefulWidget {
   bool isToggled;
 
   @override
-  _TagButtonState createState() => _TagButtonState();
+  _OnOffButtonState createState() => _OnOffButtonState();
 }
 
-class _TagButtonState extends State<TagButton> {
+class _OnOffButtonState extends State<OnOffButton> {
 
 
   @override

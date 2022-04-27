@@ -22,10 +22,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
     _isLoading = true;
     Controller().getFavorites().then((favs) {
       setState(() {
-        setState(() {
-          _favoriteRestaurants = favs;
-          _isLoading = false;
-        });
+        _favoriteRestaurants = favs;
+        _isLoading = false;
       });
     });
   }

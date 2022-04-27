@@ -6,7 +6,7 @@ import 'package:veguide/view/widgets/app_title.dart';
 import 'package:veguide/view/widgets/ask_email.dart';
 import 'package:veguide/view/widgets/leaves.dart';
 import 'package:veguide/view/widgets/suggestion_field.dart';
-import 'package:veguide/view/widgets/tag_button.dart';
+import 'package:veguide/view/widgets/on_off_button.dart';
 import 'package:veguide/view/widgets/thanks_widget.dart';
 
 class RestaurantSuggestionPage extends StatefulWidget {
@@ -214,7 +214,7 @@ class _RestaurantSuggestionPageState extends State<RestaurantSuggestionPage> {
 
   Widget createTagButton(Tag tag) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: TagButton(
+        child: OnOffButton(
           onPressed: () {
             var isToggled = _tagsToggles[tag];
             _tagsToggles[tag] = !isToggled!;
